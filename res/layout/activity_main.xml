@@ -12,7 +12,7 @@
         />
     <com.viewpagerindicator.UnderlinePageIndicator
         android:id="@+id/indicator"
-        android:layout_height="2dp"
+        android:layout_height="5dp"
         android:layout_width="fill_parent"
         />
 

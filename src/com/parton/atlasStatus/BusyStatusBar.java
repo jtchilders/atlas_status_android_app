@@ -3,7 +3,6 @@ package com.parton.atlasStatus;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 
 public class BusyStatusBar extends TextProgressBar {
 
@@ -59,10 +58,10 @@ public class BusyStatusBar extends TextProgressBar {
     }
 	
 	public synchronized void setPercent(float percent){
-		Log.v(TAG,"setPercent: name: "+name()+ ", percent: "+percent);
+//		Log.v(TAG,"setPercent: name: "+name()+ ", percent: "+percent);
 		this.setProgress((int)percent);
 		String percentText = Float.toString(percent).substring(0,3)+"%";
-		Log.v(TAG,"setPercent: percentText: "+percentText);
+//		Log.v(TAG,"setPercent: percentText: "+percentText);
 		
 		if(percent > BUSY_WARNING_LEVEL)
 			setTextColor(getResources().getColor(R.color.red));
@@ -72,19 +71,19 @@ public class BusyStatusBar extends TextProgressBar {
 		switch(textMode){
 		case TEXT_PERCENT:
 			super.setText(percentText);
-			Log.v(TAG,"setPercent: text percent");
+//			Log.v(TAG,"setPercent: text percent");
 			return;
 		case TEXT_NAME:
 			super.setText(name());
-			Log.v(TAG,"setPercent: text name");
+//			Log.v(TAG,"setPercent: text name");
 			return;
 		case TEXT_PERCENT_NAME:
 			super.setText(percentText+" "+name());
-			Log.v(TAG,"setPercent: text percent-name");
+//			Log.v(TAG,"setPercent: text percent-name");
 			return;
 		case TEXT_NAME_PERCENT:
 			super.setText(name()+" "+percentText);
-			Log.v(TAG,"setPercent: text name-percent");
+//			Log.v(TAG,"setPercent: text name-percent");
 			return;
 		default:
 			super.setText(percentText);
@@ -119,5 +118,5 @@ public class BusyStatusBar extends TextProgressBar {
     }
     
     private static final int BUSY_WARNING_LEVEL = 5;
-    private static final String TAG = "BusyStatusBar";
+//    private static final String TAG = "BusyStatusBar";
 }

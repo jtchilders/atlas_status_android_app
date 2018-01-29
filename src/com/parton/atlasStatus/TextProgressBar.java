@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ProgressBar;
 
 @SuppressLint("DrawAllocation")
@@ -40,7 +39,7 @@ public class TextProgressBar extends ProgressBar {
   
     @Override  
     protected synchronized void onDraw(Canvas canvas) {  
-    	Log.v(TAG,"onDraw: inside " + text);
+//    	Log.v(TAG,"onDraw: inside " + text);
         // First draw the regular progress bar, then custom draw our text  
         super.onDraw(canvas);
         Rect bounds = new Rect();
@@ -52,7 +51,7 @@ public class TextProgressBar extends ProgressBar {
     }  
   
     public synchronized void setText(String text) {
-    	Log.v(TAG,"setText: text = " + text);
+//    	Log.v(TAG,"setText: text = " + text);
         this.text =  text;  
         super.postInvalidate();
     }  
@@ -62,5 +61,5 @@ public class TextProgressBar extends ProgressBar {
     	super.postInvalidate();  
     }
     
-    private static final String TAG = "TextProgressBar";
+//    private static final String TAG = "TextProgressBar";
 }  

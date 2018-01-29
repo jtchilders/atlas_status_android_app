@@ -1,6 +1,5 @@
 package com.parton.atlasStatus;
 
-import com.viewpagerindicator.PageIndicator;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
 import android.net.ConnectivityManager;
@@ -29,14 +28,14 @@ public class MainActivity extends FragmentActivity {
 	private IntentFilter intent_filter = null;
 	private CustomBroadcastReceiver broadcastReceiver = null;
 	
-	public CernCookie cern_cookie = null;
+	public static CernCookie cern_cookie = null;
 	public CernCookie cern_cookie(){
 		return cern_cookie;
 	}
 	
 	MyFragmentAdapter mAdapter;
     ViewPager mPager;
-    PageIndicator mIndicator;
+    UnderlinePageIndicator mIndicator;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +49,10 @@ public class MainActivity extends FragmentActivity {
 
         mPager = (ViewPager)findViewById(R.id.pager);
         mPager.setAdapter(mAdapter);
+        mPager.setOffscreenPageLimit(2);
 
         mIndicator = (UnderlinePageIndicator)findViewById(R.id.indicator);
+        mIndicator.setFades(false);
         mIndicator.setViewPager(mPager);
         
 		
@@ -100,6 +101,7 @@ public class MainActivity extends FragmentActivity {
         if(cern_cookie != null && cern_cookie.isValid())
         	is_info_thread.updateCookie(cern_cookie);
 		is_info_thread.UpdateSyncFrequency();
+		
 		
 		// start thread
 		// pause if cookie has not been setup yet
@@ -271,6 +273,7 @@ public class MainActivity extends FragmentActivity {
 
 		builder.show();
 	}
+	
 	
 	
 	

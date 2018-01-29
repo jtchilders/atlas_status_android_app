@@ -7,24 +7,24 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 public class MyFragmentAdapter extends FragmentPagerAdapter {
 	
-	private static final int GLOBAL_STATUS_TAB = 0;
-	private static final int BUSY_STATUS_TAB   = 1;
-	private static final int NUM_TABS          = 2;
+	private static enum TABS { GLOBAL_STATUS, BUSY_STATUS, LASTDAY_LUMI };
+	
 	
 
 	public MyFragmentAdapter(FragmentManager fm) {
 		super(fm);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Fragment getItem(int i) {
-		
-		switch(i){
-		case GLOBAL_STATUS_TAB:
+		TABS tab = TABS.values()[i];
+		switch(tab){
+		case GLOBAL_STATUS:
 			return GlobalStatusFragment.newInstance();
-		case BUSY_STATUS_TAB:
+		case BUSY_STATUS:
 			return BusyStatusFragment.newInstance();
+		case LASTDAY_LUMI:
+			return LastDayLumiFragment.newInstance();
 		default:
 			return null;
 		}
@@ -33,7 +33,7 @@ public class MyFragmentAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public int getCount() {
-		return NUM_TABS;
+		return TABS.values().length;
 	}
 
 }
