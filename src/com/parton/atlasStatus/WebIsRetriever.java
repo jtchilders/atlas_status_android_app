@@ -60,7 +60,7 @@ public class WebIsRetriever {
 		try {
 //			Log.v(TAG,"getXml: setup SSLContext");
 			// create SSLContext and import instance for SSL
-			SSLContext sslContext = SSLContext.getInstance("SSL");
+			SSLContext sslContext = SSLContext.getInstance("TLS"); // was "SSL"
 			// use dummy trust manager which accepts all certificates (unsecure!!!)
 			sslContext.init(null, new javax.net.ssl.TrustManager[] { new TrustAllTrustManager() }, new  java.security.SecureRandom());
 			sslContext.getSocketFactory().createSocket(server,port);

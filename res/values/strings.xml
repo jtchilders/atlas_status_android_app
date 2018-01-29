@@ -8,7 +8,6 @@
 	<string name="title_activity_login">CERN SSO</string>
 	<string name="title_settings_activity">Settings</string>
 	
-	<string name="atlas_logo_main_desc">ATLAS Logo</string>
 	<string name="atlas_partition_status">ATLAS Status</string>
    <string name="atlas_partition_start_time">Start Time</string>
    <string name="atlas_project_tag">Project Tag</string>

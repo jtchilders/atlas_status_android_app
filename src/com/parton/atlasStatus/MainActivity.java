@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data){
-		//Log.v(TAG,"onActivityResult: inside");
+//		Log.v(TAG,"onActivityResult: inside");
 		// If the request went well (OK) and the request was GET_COOKIE
 	    if (resultCode == Activity.RESULT_OK){
 	    	switch(requestCode){
