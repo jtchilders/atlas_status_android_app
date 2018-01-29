@@ -8,7 +8,6 @@ import java.io.OutputStreamWriter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 
 public class CernCookie {
 	
@@ -79,7 +78,7 @@ public class CernCookie {
 	
 	// read cookie information from file
 	public void readCookie(){
-		//Log.v(TAG,"readCookie: inside");
+//		Log.v(TAG,"readCookie: inside");
 		BufferedReader reader = null;
 		try{
 			reader = new BufferedReader(new InputStreamReader(ParentActivity.openFileInput(COOKIE_FILENAME)));
@@ -104,13 +103,13 @@ public class CernCookie {
 			
 			
 			if(lineNumber < NUM_COOKIE_INFO-1){
-				Log.v(TAG,"readCookie: file not complete");
+//				Log.v(TAG,"readCookie: file not complete");
 				cookie("");
 				ip("");
 				time(0);
 			}
 			else if(!isValid()){
-				Log.v(TAG,"readCookie: cookie in file is not valid");
+//				Log.v(TAG,"readCookie: cookie in file is not valid");
 				cookie("");
 				ip("");
 				time(0);
@@ -118,7 +117,7 @@ public class CernCookie {
 			
 			
 		} catch (Exception e) {
-			Log.e(TAG,"readCookie: Exception when reading "+COOKIE_FILENAME);
+//			Log.e(TAG,"readCookie: Exception when reading "+COOKIE_FILENAME+", exception text: "+e.toString());
 			cookie("");
 			ip("");
 			time(0);
@@ -127,7 +126,7 @@ public class CernCookie {
 				try {
 					reader.close();
 				} catch (IOException e){
-					Log.e(TAG,"readCookie: Exception when closing "+COOKIE_FILENAME);
+//					Log.e(TAG,"readCookie: Exception when closing "+COOKIE_FILENAME+", exception text: "+e.toString());
 					e.printStackTrace();
 				}
 			}
@@ -138,25 +137,26 @@ public class CernCookie {
 		//Log.v(TAG,"writeCookie: inside");
 		String eol = System.getProperty("line.separator");
 		BufferedWriter writer = null;
+//		Log.v(TAG,"writeCookie: inside");
 		try{ 
 			writer = new BufferedWriter(new OutputStreamWriter(ParentActivity.openFileOutput(COOKIE_FILENAME,Context.MODE_PRIVATE)));
 			writer.write(cookie() + eol);
 			writer.write(time() + eol);
 			writer.write(ip() + eol);
 		} catch (Exception e) {
-			Log.e(TAG,"writeCookie: Exception when writing cookie");
+//			Log.e(TAG,"writeCookie: Exception when writing cookie: "+e.toString());
 			e.printStackTrace();
 		} finally {
 			if (writer != null){
 				try {
 					writer.close();
 				} catch (IOException e){
-					Log.e(TAG,"writeCookie: Exception when closing "+COOKIE_FILENAME);
+//					Log.e(TAG,"writeCookie: Exception when closing "+COOKIE_FILENAME+", exception text: "+e.toString());
 					e.printStackTrace();
 				}
 			}
 		}
 	}
 	
-	private static final String TAG = "CernCookie";
+//	private static final String TAG = "CernCookie";
 }

@@ -3,7 +3,6 @@ package com.parton.atlasStatus;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 import com.parton.atlasStatus.R;
 
@@ -65,9 +64,9 @@ public class PartitionStatusView extends TextView {
 			this.setBackgroundResource(R.color.partition_status_SFOSTOPPED);
 		else if(partition_state.contains("GTHSTOPPED"))
 			this.setBackgroundResource(R.color.partition_status_GTHSTOPPED);
-		else
-			Log.e(TAG,"setBackgroundColor: run state not recognized: "+partition_state);
+//		else
+//			Log.e(TAG,"setBackgroundColor: run state not recognized: "+partition_state);
 	}
 	
-	private final String TAG = "ParitionStatusView";
+//	private final String TAG = "ParitionStatusView";
 }

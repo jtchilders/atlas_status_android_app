@@ -5,11 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -19,8 +17,16 @@ public class UserInfoUpdateHandler extends Handler{
 	
 	private HashMap<String, ISInfo> ISInfoList = null;
 	
-	private Activity ParentActivity = null;
-	public void ParentActivity(Activity context){
+	public UserInfoUpdateHandler(MainActivity ParentActivity,Menu menu){
+		super();
+		ParentActivity(ParentActivity);
+		menu(menu);
+		AddViews();
+	}
+	
+	
+	private MainActivity ParentActivity = null;
+	public void ParentActivity(MainActivity context){
 		ParentActivity = context;
 	}
 	
@@ -39,7 +45,7 @@ public class UserInfoUpdateHandler extends Handler{
 			}
 		}
 		else if(msg.arg1 == ISInfoUpdaterThread.NO_CONNECTION){
-			Log.v(TAG,"no connection message received");
+//			Log.v(TAG,"no connection message received");
 			NetworkStatusChecker.ShowToast(ParentActivity,"No internet connection");
 		}
 //		else if(msg.arg1 == ISInfoUpdaterThread.CONNECTION_TYPE_CHANGE){
@@ -73,18 +79,18 @@ public class UserInfoUpdateHandler extends Handler{
 		
 		ISInfo info = ISInfoList.get("partition_status");
 		if(info == null){
-			Log.w(TAG,"updatePartitionStatusView: no ISInfo object named: "+"partition_status");
+//			Log.w(TAG,"updatePartitionStatusView: no ISInfo object named: "+"partition_status");
 			return;
 		}
 		
 		IS_XML_Attr attr = info.getAttr("state");
 		if(attr == null){
-			Log.w(TAG,"updatePartitionStatusView: no attr named: "+"state");
+//			Log.w(TAG,"updatePartitionStatusView: no attr named: "+"state");
 			return;
 		}
 		
 		if(partitionStatusView == null){
-			Log.w(TAG,"updatePartitionStatusView: partitionStatusView is null");
+//			Log.w(TAG,"updatePartitionStatusView: partitionStatusView is null");
 			return;
 		}
 		
@@ -110,18 +116,18 @@ public class UserInfoUpdateHandler extends Handler{
 		
 		ISInfo info = ISInfoList.get(is_info_name);
 		if(info == null){
-			Log.w(TAG,"updateTextView: no ISInfo object named: "+is_info_name);
+//			Log.w(TAG,"updateTextView: no ISInfo object named: "+is_info_name);
 			return;
 		}
 		
 		IS_XML_Attr attr = info.getAttr(is_attr_name);
 		if(attr == null){
-			Log.w(TAG,"updateTextView: no attr named: "+is_attr_name);
+//			Log.w(TAG,"updateTextView: no attr named: "+is_attr_name);
 			return;
 		}
 		
 		if(text_view == null){
-			Log.w(TAG,"updateTextView: text_view is null");
+//			Log.w(TAG,"updateTextView: text_view is null");
 			return;
 		}
 		
@@ -179,18 +185,18 @@ public class UserInfoUpdateHandler extends Handler{
 		
 		ISInfo info = ISInfoList.get(is_info_name);
 		if(info == null){
-			Log.w(TAG,"updateTextView: no ISInfo object named: "+is_info_name);
+//			Log.w(TAG,"updateTextView: no ISInfo object named: "+is_info_name);
 			return;
 		}
 		
 		IS_XML_Attr attr = info.getAttr(is_attr_name);
 		if(attr == null){
-			Log.w(TAG,"updateTextView: no attr named: "+is_attr_name);
+//			Log.w(TAG,"updateTextView: no attr named: "+is_attr_name);
 			return;
 		}
 		
 		if(text_view == null){
-			Log.w(TAG,"updateTextView: text_view is null");
+//			Log.w(TAG,"updateTextView: text_view is null");
 			return;
 		}
 		
@@ -232,18 +238,18 @@ public class UserInfoUpdateHandler extends Handler{
 		String is_attr_name = "detector_mask";
 		ISInfo info = ISInfoList.get(is_info_name);
 		if(info == null){
-			Log.w(TAG,"updateDetectorMaskTextView: no ISInfo object named: "+is_info_name);
+//			Log.w(TAG,"updateDetectorMaskTextView: no ISInfo object named: "+is_info_name);
 			return;
 		}
 		
 		IS_XML_Attr attr = info.getAttr(is_attr_name);
 		if(attr == null){
-			Log.w(TAG,"updateDetectorMaskTextView: no attr named: "+is_attr_name);
+//			Log.w(TAG,"updateDetectorMaskTextView: no attr named: "+is_attr_name);
 			return;
 		}
 		
 		if(text_view == null){
-			Log.w(TAG,"updateDetectorMaskTextView: text_view is null");
+//			Log.w(TAG,"updateDetectorMaskTextView: text_view is null");
 			return;
 		}
 		
@@ -282,8 +288,8 @@ public class UserInfoUpdateHandler extends Handler{
 			MenuItem item = menu.findItem(R.id.menu_last_update_time);
 			item.setTitle("Update at: " + dateFormatted);
 		}
-		else
-			Log.w(TAG,"updateMenuTime: menu not set");
+//		else
+//			Log.w(TAG,"updateMenuTime: menu not set");
 	}
 	
 	private final float busy_warning_level = 5; // % busy
@@ -299,18 +305,18 @@ public class UserInfoUpdateHandler extends Handler{
 		String is_info_name = "l1ct_busy_status";
 		ISInfo info = ISInfoList.get(is_info_name);
 		if(info == null){
-			Log.w(TAG,"busyStatusTextViewList: no ISInfo object named: "+is_info_name);
+//			Log.w(TAG,"busyStatusTextViewList: no ISInfo object named: "+is_info_name);
 			return;
 		}
 		
 		IS_XML_Attr attr = info.getAttr(is_attr_name);
 		if(attr == null){
-			Log.w(TAG,"busyStatusTextViewList: no attr named: "+is_attr_name);
+//			Log.w(TAG,"busyStatusTextViewList: no attr named: "+is_attr_name);
 			return;
 		}
 		
 		if(text_view == null){
-			Log.w(TAG,"busyStatusTextViewList: text_view is null");
+//			Log.w(TAG,"busyStatusTextViewList: text_view is null");
 			return;
 		}
 		
@@ -335,6 +341,78 @@ public class UserInfoUpdateHandler extends Handler{
 		}
 	}
 	
+	private void AddViews(){
+		PartitionStatusView partition_status_view = (PartitionStatusView) ParentActivity.findViewById(R.id.atlas_partition_status);
+		TextView run_number_view = (TextView) ParentActivity.findViewById(R.id.atlas_run_number);
+		TextView project_tag_view = (TextView) ParentActivity.findViewById(R.id.atlas_project_tag);
+		TextView partition_start_time_view = (TextView) ParentActivity.findViewById(R.id.atlas_partition_start_time);
+		TextView lhc_page_one_status_time_view = (TextView) ParentActivity.findViewById(R.id.lhc_page_one_status_time);
+		TextView lhc_page_one_status_view = (TextView) ParentActivity.findViewById(R.id.lhc_page_one_status);
+		TextView atlas_included_hw_muctpi = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_muctpi);
+		TextView atlas_included_hw_ctp = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_ctp);
+		TextView atlas_included_hw_l1calo = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_l1calo);
+		TextView atlas_included_hw_hlt = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_hlt);
+		TextView atlas_included_hw_rpc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_rpc);
+		TextView atlas_included_hw_tgc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_tgc);
+		TextView atlas_included_hw_mdt = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_mdt);
+		TextView atlas_included_hw_csc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_csc);
+		TextView atlas_included_hw_lar = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_lar);
+		TextView atlas_included_hw_tile = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_tile);
+		TextView atlas_included_hw_pix = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_pix);
+		TextView atlas_included_hw_sct = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_sct);
+		TextView atlas_included_hw_trt = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_trt);
+		TextView atlas_included_hw_lucid = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_lucid);
+		TextView atlas_included_hw_bcm = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_bcm);
+		TextView atlas_included_hw_alfa = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_alfa);
+		TextView atlas_included_hw_zdc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_zdc);
+		TextView atlas_ready4physics_view = (TextView) ParentActivity.findViewById(R.id.atlas_ready4physics);
+		TextView lhc_stable_beams_flag_view = (TextView) ParentActivity.findViewById(R.id.lhc_stable_beams_flag);
+		TextView lhc_beam_mode_view = (TextView) ParentActivity.findViewById(R.id.lhc_beam_mode);
+		
+		// busy
+		TextView busy_summary_high = (TextView) ParentActivity.findViewById(R.id.busy_summary_high);
+		TextView busy_summary_low = (TextView) ParentActivity.findViewById(R.id.busy_summary_low);
+		
+
+		// partition status
+		partitionStatusView(partition_status_view);
+		
+		// some run information
+		simpleTextViewList("run_parameters", "run_number", run_number_view);
+		simpleTextViewList("run_parameters","T0_project_tag",project_tag_view);
+		simpleTextViewList("run_parameters", "timeSOR", partition_start_time_view);
+		bkgdColorTextViewList("run_ready4physics", "value", "True", atlas_ready4physics_view);
+		
+		// lhc status page
+		simpleTextViewList("lhc_page_one_status", "ts", lhc_page_one_status_time_view);
+		simpleTextViewList("lhc_page_one_status", "value", lhc_page_one_status_view);
+		bkgdColorTextViewList("lhc_stable_beams_flag", "value", "1", lhc_stable_beams_flag_view);
+		simpleTextViewList("lhc_beam_mode", "value", lhc_beam_mode_view);
+		
+		// detector mask
+		detectorMaskTextViewList("TDAQ_MUON_CTP_INTERFACE", atlas_included_hw_muctpi);
+		detectorMaskTextViewList("TDAQ_CTP", atlas_included_hw_ctp);
+		detectorMaskTextViewList("TDAQ_CALO", atlas_included_hw_l1calo);
+		detectorMaskTextViewList("TDAQ_HLT", atlas_included_hw_hlt);
+		detectorMaskTextViewList("MUON_RPC", atlas_included_hw_rpc);
+		detectorMaskTextViewList("MUON_TGC", atlas_included_hw_tgc);
+		detectorMaskTextViewList("MUON_MDT", atlas_included_hw_mdt);
+		detectorMaskTextViewList("MUON_CSC", atlas_included_hw_csc);
+		detectorMaskTextViewList("LAR", atlas_included_hw_lar);
+		detectorMaskTextViewList("TILECAL", atlas_included_hw_tile);
+		detectorMaskTextViewList("PIXEL", atlas_included_hw_pix);
+		detectorMaskTextViewList("SCT", atlas_included_hw_sct);
+		detectorMaskTextViewList("TRT", atlas_included_hw_trt);
+		detectorMaskTextViewList("FORWARD_LUCID", atlas_included_hw_lucid);
+		detectorMaskTextViewList("FORWARD_BCM", atlas_included_hw_bcm);
+		detectorMaskTextViewList("FORWARD_ALFA", atlas_included_hw_alfa);
+		detectorMaskTextViewList("FORWARD_ZDC", atlas_included_hw_zdc);
+		
+		// busy status
+		busyStatusTextViewList("ctpcore_moni0_rate", busy_summary_low);
+		busyStatusTextViewList("ctpcore_moni1_rate", busy_summary_high);
+	}
 	
-	private final String TAG = "UserInfoUpdaterHandler";
+	
+//	private final String TAG = "UserInfoUpdaterHandler";
 }

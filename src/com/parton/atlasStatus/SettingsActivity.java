@@ -5,9 +5,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceScreen;
-import android.util.Log;
-import com.parton.atlasStatus.R;
 
 
 public class SettingsActivity extends PreferenceActivity
@@ -20,7 +17,7 @@ public class SettingsActivity extends PreferenceActivity
 	@Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG,"onResume: inside");
+//        Log.v(TAG,"onResume: inside");
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -28,7 +25,7 @@ public class SettingsActivity extends PreferenceActivity
 	@Override
     protected void onPause() {
         super.onPause();
-        Log.v(TAG,"onPause: inside");
+//        Log.v(TAG,"onPause: inside");
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
     
@@ -36,7 +33,7 @@ public class SettingsActivity extends PreferenceActivity
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(TAG,"onCreate: inside");
+//        Log.v(TAG,"onCreate: inside");
         addPreferencesFromResource(R.xml.preferences);
         SharedPreferences shared = this.getPreferenceScreen().getSharedPreferences();
         String syncSetting = shared.getString(KEY_PREF_SYNC_FREQ,"10");
@@ -44,9 +41,9 @@ public class SettingsActivity extends PreferenceActivity
     }
     
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	Log.v(TAG,"onSharedPreferenceChanged: inside");
+//    	Log.v(TAG,"onSharedPreferenceChanged: inside");
         if (key.equals(KEY_PREF_SYNC_FREQ)) {
-        	Log.v(TAG,"onSharedPreferenceChanged: In Sync Frequency Setting");
+//        	Log.v(TAG,"onSharedPreferenceChanged: In Sync Frequency Setting");
             // Set summary to be the user-description for the selected value
             String syncSetting = sharedPreferences.getString(KEY_PREF_SYNC_FREQ,"10");
             setSyncFreqSummary(syncSetting);
@@ -54,14 +51,14 @@ public class SettingsActivity extends PreferenceActivity
     }
     
     private void setSyncFreqSummary(String syncSetting){
-    	Log.v(TAG,"setSyncFreqSummary String: inside");
+//    	Log.v(TAG,"setSyncFreqSummary String: inside");
     	int setting = Integer.decode(syncSetting);
     	setSyncFreqSummary(setting);
     }
     
     @SuppressWarnings("deprecation")
 	private void setSyncFreqSummary(int syncSetting){
-    	Log.v(TAG,"setSyncFreqSummary: inside");
+//    	Log.v(TAG,"setSyncFreqSummary: inside");
     	String units = "sec";
         if(syncSetting >= 60){
         	syncSetting = syncSetting/60;
@@ -72,5 +69,5 @@ public class SettingsActivity extends PreferenceActivity
         syncPref.setSummary(syncSummary);
     }
     
-    private final String TAG = "SettingsActivity";
+//    private final String TAG = "SettingsActivity";
 }

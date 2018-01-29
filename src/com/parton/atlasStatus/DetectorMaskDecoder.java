@@ -1,6 +1,5 @@
 package com.parton.atlasStatus;
 
-//import android.util.Log;
 
 public class DetectorMaskDecoder {
 //	private static final String TAG = "DetectorMaskDecoder";

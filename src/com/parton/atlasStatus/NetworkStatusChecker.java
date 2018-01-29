@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.Toast;
 
 public class NetworkStatusChecker {
@@ -23,7 +22,7 @@ public class NetworkStatusChecker {
 
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		if(activeNetwork == null){
-			Log.w(TAG,"isConnected: activeNetwork is null");
+//			Log.w(TAG,"isConnected: activeNetwork is null");
 			return false;
 		}
 		return activeNetwork.isConnected();
@@ -90,8 +89,9 @@ public class NetworkStatusChecker {
 					}
 				}
 			}
-		} catch (SocketException ex) {
-			Log.e(TAG, ex.toString());
+		} catch (SocketException e) {
+//			Log.e(TAG, ex.toString());
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -124,5 +124,5 @@ public class NetworkStatusChecker {
 		Toast.makeText(context,text,Toast.LENGTH_LONG).show();
 	}
 
-	private final static String TAG = "NetworkStatusChecker";
+//	private final static String TAG = "NetworkStatusChecker";
 }

@@ -8,9 +8,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.util.Log;
 
-//import android.util.Log;
 
 public class ISInfo {
 	
@@ -54,7 +52,7 @@ public class ISInfo {
 		return info_name;
 	}
 
-	public ISInfo(String partition, String provider, String info_name, String cookie){ 
+	public ISInfo(String partition, String provider, String info_name, CernCookie cookie){ 
 		provider(provider);
 		info_name(info_name);
 		partition(partition);
@@ -70,11 +68,11 @@ public class ISInfo {
 
 		String xml = webis.getXml(path);
 		if(xml.length() == 0){
-			Log.w(TAG,"update: xml is empty: "+xml);
+//			Log.w(TAG,"update: xml is empty: "+xml);
 			return XML_EMPTY;
 		}
 		else if(xml.contains("CERN Authentication")){
-			Log.w(TAG,"update: xml is CERN SSO page");
+//			Log.w(TAG,"update: xml is CERN SSO page");
 			return XML_IS_SSO;
 		}
 
@@ -175,10 +173,10 @@ public class ISInfo {
 		return 0;
 	}
 	
-	public void updateCookie(String cookie){
+	public void updateCookie(CernCookie cookie){
 		webis.cookie(cookie);
 	}
 
 
-	private final String TAG = "ISInfo";
+//	private final String TAG = "ISInfo";
 }

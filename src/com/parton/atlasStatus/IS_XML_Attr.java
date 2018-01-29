@@ -1,8 +1,5 @@
 package com.parton.atlasStatus;
 
-import android.util.Log;
-import com.parton.atlasStatus.R;
-
 public class IS_XML_Attr {
 	private String name = "";
 	public void name(String name){
@@ -65,8 +62,8 @@ public class IS_XML_Attr {
 			this.multi = var_value;
 		else if(var_name.contains("value"))
 			this.value = var_value;
-		else
-			Log.e(TAG,"setValue: attribute name not found: "+var_name+"="+var_value);
+//		else
+//			Log.e(TAG,"setValue: attribute name not found: "+var_name+"="+var_value);
 	}
 	
 	public String toString(){
@@ -74,5 +71,5 @@ public class IS_XML_Attr {
 		return out;
 	}
 	
-	private final String TAG = "IS_XML_Attr";
+//	private final String TAG = "IS_XML_Attr";
 }

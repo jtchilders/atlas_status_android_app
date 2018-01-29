@@ -12,13 +12,11 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
-import android.util.Log;
-
 public class WebIsRetriever {
 	public WebIsRetriever(String partition){
 		partition(partition);
 	}
-	public WebIsRetriever(String partition,String cookie){
+	public WebIsRetriever(String partition,CernCookie cookie){
 		partition(partition);
 		cookie(cookie);
 	}
@@ -27,13 +25,13 @@ public class WebIsRetriever {
 	private final int    port     = 443;
 	private final String protocol = "https://";
 	private final String server   = "atlasop.cern.ch";
-	private final String TAG      = "WebIsRetriever";
+//	private final String TAG      = "WebIsRetriever";
 	
-	private String cookie = "";
-	public void cookie(String cookie){
+	private CernCookie cookie = null;
+	public void cookie(CernCookie cookie){
 		this.cookie = cookie;
 	}
-	public String cookie(){
+	public CernCookie cookie(){
 		return cookie;
 	}
 	
@@ -50,8 +48,12 @@ public class WebIsRetriever {
 		
 //		Log.v(TAG,"getXml: cookie: "+cookie);
 		
-		if(cookie.length() == 0){
-			Log.w(TAG,"getXml: cookie is empty: "+cookie);
+		if(cookie == null){
+//			Log.w(TAG,"getXml: cookie is not set");
+			return "";
+		}
+		else if(!cookie.isValid()){
+//			Log.w(TAG,"getXml: cookie is not valid.");
 			return "";
 		}
 		
@@ -76,13 +78,13 @@ public class WebIsRetriever {
 			// add socket factory to accept certificate
 			connection.setSSLSocketFactory(sslContext.getSocketFactory());
 			// add cookies for Sign on authentication
-			connection.setRequestProperty("Cookie", cookie);
+			connection.setRequestProperty("Cookie", cookie.cookie());
 			
 //			Log.v(TAG,"getXml: get xml as string");
 			// retrieve the input stream from the URL
 			InputStream dataStream = connection.getInputStream();
 			if(dataStream == null){
-				Log.e(TAG,"getXml: failed to get input stream.");
+//				Log.e(TAG,"getXml: failed to get input stream.");
 				return "";
 			}
 			BufferedReader in = new BufferedReader(new InputStreamReader(dataStream));
@@ -98,19 +100,19 @@ public class WebIsRetriever {
 //			Log.v(TAG,"getXml: done, content = "+content);
 			
 		} catch (NoSuchAlgorithmException e) {
-			Log.e(TAG,"getXml: caught NoSuchAlgorithmException");
+//			Log.e(TAG,"getXml: caught NoSuchAlgorithmException: "+e.toString());
 			e.printStackTrace();
 			return "";
 		} catch (KeyManagementException e) {
-			Log.e(TAG,"getXml: caught KeyManagementException");
+//			Log.e(TAG,"getXml: caught KeyManagementException: "+e.toString());
 			e.printStackTrace();
 			return "";
 		} catch (UnknownHostException e) {
-			Log.e(TAG,"getXml: caught KeyManagementException");
+//			Log.e(TAG,"getXml: caught KeyManagementException: "+e.toString());
 			e.printStackTrace();
 			return "";
 		} catch (IOException e) {
-			Log.e(TAG,"getXml: caught KeyManagementException");
+//			Log.e(TAG,"getXml: caught KeyManagementException: "+e.toString());
 			e.printStackTrace();
 			return "";
 		}
