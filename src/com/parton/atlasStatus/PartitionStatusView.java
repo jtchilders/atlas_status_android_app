@@ -65,6 +65,10 @@ public class PartitionStatusView extends MyTextView {
 			this.setBackgroundResource(R.color.partition_status_SFOSTOPPED);
 		else if(partition_state.contains("GTHSTOPPED"))
 			this.setBackgroundResource(R.color.partition_status_GTHSTOPPED);
+		else if(partition_state.contains("PARTITION_DOWN")){
+			this.setBackgroundResource(R.color.partition_status_PARTITION_DOWN);
+			this.setText(MainActivity.TDAQ_PARTITION+" Down");
+		}
 //		else
 //			Log.e(TAG,"setBackgroundColor: run state not recognized: "+partition_state);
 	}

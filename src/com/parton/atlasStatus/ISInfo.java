@@ -16,6 +16,7 @@ public class ISInfo {
 	
 	public final static int XML_EMPTY = -1;
 	public final static int XML_IS_SSO = -2;
+	public final static int PARTITION_DOWN = -3;
 	
 	private WebIsRetriever webis = null;
 	protected HashMap<String, ISObjectAttr> attributes = new HashMap<String, ISObjectAttr>();
@@ -78,6 +79,9 @@ public class ISInfo {
 		else if(xml.contains("CERN Authentication")){
 //			Log.w(TAG,"update: xml is CERN SSO page");
 			return XML_IS_SSO;
+		}
+		else if(xml.contains(WebIsRetriever.IS_OBJECT_NOT_FOUND)){
+			return PARTITION_DOWN;
 		}
 
 		XmlPullParserFactory factory = XmlPullParserFactory.newInstance();

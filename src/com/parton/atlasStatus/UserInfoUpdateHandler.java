@@ -65,6 +65,10 @@ public class UserInfoUpdateHandler extends Handler{
 				ParentActivity.startActivityForResult(loginIntent,MainActivity.GET_COOKIE);
 			}
 		}
+		else if(msg.arg1 == ISInfoUpdaterThread.PARTITION_DOWN){
+			PartitionStatusView partition_status = (PartitionStatusView) ParentActivity.findViewById(R.id.atlas_partition_status);
+			partition_status.setText("PARTITION_DOWN");
+		}
 	}
 	
 	//////////////////////

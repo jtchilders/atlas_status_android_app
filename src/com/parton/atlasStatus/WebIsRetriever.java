@@ -12,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 
+
 public class WebIsRetriever {
 	public WebIsRetriever(String partition){
 		partition(partition);
@@ -26,6 +27,8 @@ public class WebIsRetriever {
 	private final String protocol = "https://";
 	private final String server   = "atlasop.cern.ch";
 //	private final String TAG      = "WebIsRetriever";
+	
+	public final static String IS_OBJECT_NOT_FOUND = "FileNotFoundException";
 	
 	private CernCookie cookie = null;
 	public void cookie(CernCookie cookie){
@@ -113,6 +116,10 @@ public class WebIsRetriever {
 			return "";
 		} catch (IOException e) {
 //			Log.e(TAG,"getXml: caught KeyManagementException: "+e.toString());
+			if(e.toString().contains("FileNotFoundException")){
+				e.printStackTrace();
+				return IS_OBJECT_NOT_FOUND;
+			}
 			e.printStackTrace();
 			return "";
 		}

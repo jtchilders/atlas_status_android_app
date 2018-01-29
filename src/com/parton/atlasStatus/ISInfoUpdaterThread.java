@@ -15,6 +15,7 @@ public class ISInfoUpdaterThread extends Thread {
 	public final static int NO_CONNECTION = 2;
 	public final static int CONNECTION_TYPE_CHANGE = 3;
 	public final static int XML_IS_SSO = 4;
+	public final static int PARTITION_DOWN =5;
 
 	private MainActivity ParentActivity = null;
 	
@@ -145,6 +146,13 @@ public class ISInfoUpdaterThread extends Thread {
 							userInfoUpdateHandler.sendMessage(msg);
 							pauseUpdate = true;
 							break;
+						}
+						else if(returnValue == ISInfo.PARTITION_DOWN && tmp.partition().contains(MainActivity.TDAQ_PARTITION)){
+							
+							Message msg = new Message();
+							msg.arg1 = PARTITION_DOWN;
+							userInfoUpdateHandler.sendMessage(msg);
+							
 						}
 					} catch (XmlPullParserException e) {
 						// TODO Auto-generated catch block

@@ -17,6 +17,7 @@
 <color name="partition_status_EFSTOPPED">#00FF33</color>
 <color name="partition_status_SFOSTOPPED">#00FF33</color>
 <color name="partition_status_GTHSTOPPED">#00FF33</color>
+<color name="partition_status_PARTITION_DOWN">#0080FF</color>
 
 <color name="detector_included">#00FF33</color>
 <color name="detector_excluded">#FF0000</color>
