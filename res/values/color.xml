@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<color name="partition_status_NONE">#DDDDDD</color>
+<color name="partition_status_INITIAL">#66FFFF</color>
+<color name="partition_status_ABSENT">#666666</color>
+<color name="partition_status_UP">#00FF33</color>
+<color name="partition_status_CONNECTED">#FFCC33</color>
+<color name="partition_status_CONFIGURED">#FFDD00</color>
+<color name="partition_status_BOOTED">#DDDDDD</color>
+<color name="partition_status_RUNNING">#00FF33</color>
+<color name="partition_status_PAUSED">#00FF33</color>
+<color name="partition_status_READY">#00FF33</color>
+<color name="partition_status_ROIBSTOPPED">#00FF33</color>
+<color name="partition_status_LV2SVSTOPPED">#00FF33</color>
+<color name="partition_status_L2STOPPED">#00FF33</color>
+<color name="partition_status_EBSTOPPED">#00FF33</color>
+<color name="partition_status_EFSTOPPED">#00FF33</color>
+<color name="partition_status_SFOSTOPPED">#00FF33</color>
+<color name="partition_status_GTHSTOPPED">#00FF33</color>
+
+<color name="detector_included">#00FF33</color>
+<color name="detector_excluded">#FF0000</color>
+<color name="detector_unknown">#DDDDDD</color>
+
+<color name="black">#000000</color>
+<color name="white">#FFFFFF</color>
+<color name="red">#FF0000</color>
+<color name="green">#00FF00</color>
+</resources>

@@ -1,0 +1,41 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.parton.atlasStatus"
+	android:versionCode="5"
+	android:versionName="1.4" >
+
+	<uses-sdk
+		android:minSdkVersion="8"
+		android:targetSdkVersion="15" />
+
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+	<application
+		android:icon="@drawable/atlas_logo_icon"
+		android:label="@string/app_name"
+		android:theme="@style/AppTheme" >
+		<activity
+			android:name="com.parton.atlasStatus.MainActivity"
+			android:label="@string/title_activity_main"
+			android:screenOrientation="portrait" >
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity
+			android:name="com.parton.atlasStatus.LoginActivity"
+			android:label="@string/title_activity_login"
+         android:screenOrientation="portrait" >
+			<meta-data
+				android:name="android.support.PARENT_ACTIVITY"
+				android:value="com.parton.atlasStatus.MainActivity" />
+		</activity>
+		<activity 
+			android:name="com.parton.atlasStatus.SettingsActivity"
+			android:label="@string/title_settings_activity" >
+		</activity>
+	</application>
+
+</manifest>
