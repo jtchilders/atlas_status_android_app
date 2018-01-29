@@ -1,20 +1,11 @@
 package com.parton.atlasStatus;
 
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -29,26 +20,30 @@ import com.parton.atlasStatus.R;
 public class MainActivity extends Activity {
 	
 	private String atlas_cookie = "";
-	private long atlas_cookie_time_of_last_update = 0;
-	private int atlas_cookie_networkType = 0;
-	private String atlas_cookie_ip = "";
+//	private long atlas_cookie_time_of_last_update = 0;
+//	private int atlas_cookie_networkType = 0;
+//	private String atlas_cookie_ip = "";
 	private ISInfoUpdaterThread is_info_thread = null;
 	private UserInfoUpdateHandler is_thread_handler = null;
 	
 	private String partitionName = "ATLAS_mirror";
 	
 	private IntentFilter intent_filter = null;
-	private BroadcastReceiver networkStateReceiver = null;
+	private CustomBroadcastReceiver broadcastReceiver = null;
+	
+	private CernCookie cern_cookie = null;
+	public CernCookie cern_cookie(){
+		return cern_cookie;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//Log.v(TAG,"onCreate: inside");
 		
-		
         setContentView(R.layout.activity_main);
         //getActionBar().setDisplayHomeAsUpEnabled(true);
-	    
+        
         // check for network connection
         if(!NetworkStatusChecker.isConnected(this)){
         	//Log.v(TAG,"onCreate: not connected");
@@ -56,14 +51,15 @@ public class MainActivity extends Activity {
         	return;
         }
         
-		readCookie();
-		// if no cookies set, get one
-		if(atlas_cookie_time_of_last_update == 0 || 
-				!atlas_cookie_ip.contains(NetworkStatusChecker.getLocalIpAddress()) ||
-				atlas_cookie_networkType != NetworkStatusChecker.getNetworkType(this)
-				){
-			showSSO();
-		}
+
+        if(cern_cookie == null){
+        	cern_cookie = new CernCookie(this);
+        	cern_cookie.readCookie();
+        	if(!cern_cookie.isValid()){
+        		showSSO();
+        	}
+        }
+	    
 		
 
         
@@ -78,43 +74,24 @@ public class MainActivity extends Activity {
 	public void onStart(){
 		super.onStart();
 		//Log.v(TAG,"onStart: inside");
-		final Context ParentActivity = this;
 
         // listen for connection changes
-        networkStateReceiver = new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                Log.v(TAG, "onStart: Network Type Changed");
-                if(NetworkStatusChecker.isConnected(ParentActivity)){
-                	Log.v(TAG, "onStart: Network Connected");
-	                String ip = NetworkStatusChecker.getLocalIpAddress();
-	                if(ip != null){
-		                if(!ip.equals(atlas_cookie_ip)){
-		                	NetworkStatusChecker.ShowToast(ParentActivity, "Network IP Changed, new login needed");
-		                	Log.v(TAG,"old ip: "+atlas_cookie_ip+" new ip: "+NetworkStatusChecker.getLocalIpAddress());
-		                	showSSO();
-		                }
-		                // ip is the same, but thread was paused, restart it
-		                else if(is_info_thread.pauseUpdate()){
-		                	NetworkStatusChecker.ShowToast(ParentActivity, "Conection returned, restarting update");
-		                	is_info_thread.pauseUpdate(false);
-		                	is_info_thread.interrupt();
-		                }
-	                }
-                }
-            }
-        };
+        broadcastReceiver = new CustomBroadcastReceiver(this);
 
         intent_filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);        
-        registerReceiver(networkStateReceiver, intent_filter);
+        registerReceiver(broadcastReceiver, intent_filter);
 
 		// create updater thread
 		getNewISInfoUpdaterThread();
-		is_info_thread.updateCookie(atlas_cookie);
+		is_info_thread.updateCookie(cern_cookie.cookie());
 		//Log.v(TAG,"onStart: menu: " + menu);
 		is_thread_handler.menu(menu);
+		
 		// start thread
+		// pause if cookie has not been setup yet
+		if(!cern_cookie.isValid()){
+			is_info_thread.pauseUpdate(true);
+		}
 		is_info_thread.start();
 			
         
@@ -131,7 +108,7 @@ public class MainActivity extends Activity {
 		super.onResume();
 		//Log.v(TAG,"onResume: inside");
 		
-		if(is_info_thread.pauseUpdate()){
+		if(is_info_thread.pauseUpdate() && cern_cookie.isValid()){
 			//Log.v(TAG,"onResume: unpausing is_info_thread");
 			is_info_thread.pauseUpdate(false);
 			is_info_thread.interrupt();
@@ -152,7 +129,7 @@ public class MainActivity extends Activity {
 		super.onStop();
 		//Log.v(TAG,"onStop: inside");
 		
-		unregisterReceiver(networkStateReceiver);
+		unregisterReceiver(broadcastReceiver);
 
 		if(is_info_thread != null){
 			is_info_thread.doUpdate(false);
@@ -173,7 +150,9 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 		//Log.v(TAG,"onDestroy: inside");
 		
-		writeCookie();
+		if(cern_cookie != null){
+			cern_cookie.writeCookie();
+		}
 	}
 	
 	private Menu menu = null;
@@ -215,21 +194,19 @@ public class MainActivity extends Activity {
 	    if (resultCode == Activity.RESULT_OK){
 	    	switch(requestCode){
 	    	case GET_COOKIE:
-		        atlas_cookie_time_of_last_update = System.currentTimeMillis();
-		        atlas_cookie = data.getStringExtra(LoginActivity.CookieReturnData);
+	    		Log.v(TAG,"onActivityResult: received cookie from LoginActivity");
+		        cern_cookie.setTime();
+		        cern_cookie.cookie(data.getStringExtra(LoginActivity.CookieReturnData));
+		        cern_cookie.setIp();
+		        
 		        if(is_info_thread != null){
-		        	is_info_thread.updateCookie(atlas_cookie);
+		        	is_info_thread.updateCookie(cern_cookie.cookie());
 		        	// need to restart thread if it is waiting for a new cookie
-			        if(is_info_thread.pauseUpdate()){
-			        	is_info_thread.pauseUpdate(false);
-			        	is_info_thread.interrupt();
-			        }
+			        unpauseThread();
 		        }
 		        else{
 		        	Log.v(TAG,"onActivityResult: thread is null!");
 		        }
-		        atlas_cookie_networkType = NetworkStatusChecker.getNetworkType(this);
-		        atlas_cookie_ip = NetworkStatusChecker.getLocalIpAddress();
 		        
 		        break;
 	    	case GET_SYNC_FREQ:
@@ -266,108 +243,116 @@ public class MainActivity extends Activity {
 //		}
 //	}
 	
-	private final String cookieFilename = "atlas_cookie.txt";
-	private final long max_time_diff_sec = 60*60*2; // 2 hrs
-	// write cookie to file so it can be loaded
-	private void writeCookie(){
-		//Log.v(TAG,"writeCookie: inside");
-		String eol = System.getProperty("line.separator");
-		BufferedWriter writer = null;
-		try{
-			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(cookieFilename,MODE_PRIVATE)));
-			writer.write(atlas_cookie + eol);
-			writer.write(atlas_cookie_time_of_last_update + eol);
-			writer.write(atlas_cookie_networkType + eol);
-			writer.write(atlas_cookie_ip + eol);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (writer != null){
-				try {
-					writer.close();
-				} catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
-	private void readCookie(){
-		//Log.v(TAG,"readCookie: inside");
-		BufferedReader reader = null;
-		try{
-			reader = new BufferedReader(new InputStreamReader(openFileInput(cookieFilename)));
-			String line = null;
-			line = reader.readLine();
-			if(line != null){
-				String cookie = line;
-				
-				line = reader.readLine();
-				if(line != null){
-					long cookieTimeMillis = Long.decode(line);
-					long localTimeMillis = System.currentTimeMillis();
-					
-					if((localTimeMillis - cookieTimeMillis)/1000 < max_time_diff_sec){
-						atlas_cookie = cookie;
-						atlas_cookie_time_of_last_update = cookieTimeMillis;
-						
-						line = reader.readLine();
-						if(line != null){
-							int networkType = Integer.decode(line);
-							int current_networkType = NetworkStatusChecker.getNetworkType(this);
-							if(current_networkType == networkType){
-								atlas_cookie_networkType = networkType;
-								
-								line = reader.readLine();
-								if(line != null){
-									atlas_cookie_ip = line;
-								}
-								else{
-									atlas_cookie = "";
-									atlas_cookie_time_of_last_update = 0;
-									atlas_cookie_networkType = 0;
-									atlas_cookie_ip = "";
-								}
-							}
-							else{
-								atlas_cookie = "";
-								atlas_cookie_time_of_last_update = 0;
-								atlas_cookie_networkType = 0;
-								atlas_cookie_ip = "";
-							}
-						}
-						else{
-							atlas_cookie = "";
-							atlas_cookie_time_of_last_update = 0;
-							atlas_cookie_networkType = 0;
-							atlas_cookie_ip = "";
-						}
-					}
-					else{
-						atlas_cookie = "";
-						atlas_cookie_time_of_last_update = 0;
-						atlas_cookie_networkType = 0;
-						atlas_cookie_ip = "";
-					}
-					
-				}
-			}
-			
-		} catch (Exception e) {
-			atlas_cookie = "";
-			atlas_cookie_time_of_last_update = 0;
-			atlas_cookie_networkType = 0;
-			atlas_cookie_ip = "";
-		} finally {
-			if (reader != null){
-				try {
-					reader.close();
-				} catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+//	private final String cookieFilename = "atlas_cookie.txt";
+//	private final long max_time_diff_sec = 60*60*2; // 2 hrs
+//	// write cookie to file so it can be loaded
+//	private void writeCookie(){
+//		//Log.v(TAG,"writeCookie: inside");
+//		String eol = System.getProperty("line.separator");
+//		BufferedWriter writer = null;
+//		try{
+//			writer = new BufferedWriter(new OutputStreamWriter(openFileOutput(cookieFilename,MODE_PRIVATE)));
+//			writer.write(atlas_cookie + eol);
+//			writer.write(atlas_cookie_time_of_last_update + eol);
+//			writer.write(atlas_cookie_networkType + eol);
+//			writer.write(atlas_cookie_ip + eol);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (writer != null){
+//				try {
+//					writer.close();
+//				} catch (IOException e){
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
+//	
+//	private void readCookie(){
+//		//Log.v(TAG,"readCookie: inside");
+//		BufferedReader reader = null;
+//		try{
+//			reader = new BufferedReader(new InputStreamReader(openFileInput(cookieFilename)));
+//			String line = null;
+//			line = reader.readLine();
+//			if(line != null){
+//				String cookie = line;
+////				Log.v(TAG,"readCookie: cookie: "+ cookie);
+//				
+//				line = reader.readLine();
+//				if(line != null){
+//					long cookieTimeMillis = Long.decode(line);
+//					long localTimeMillis = System.currentTimeMillis();
+////					Log.v(TAG,"readCookie: cookie time stamp: "+ cookieTimeMillis);
+//					if((localTimeMillis - cookieTimeMillis)/1000 < max_time_diff_sec){
+//						atlas_cookie = cookie;
+//						atlas_cookie_time_of_last_update = cookieTimeMillis;
+//						
+//						line = reader.readLine();
+//						if(line != null){
+//							int networkType = Integer.decode(line);
+//							int current_networkType = NetworkStatusChecker.getNetworkType(this);
+//							if(current_networkType == networkType){
+//								atlas_cookie_networkType = networkType;
+//
+////								Log.v(TAG,"readCookie: cookie network type: "+ atlas_cookie_networkType);
+//								line = reader.readLine();
+//								if(line != null){
+//									atlas_cookie_ip = line;
+////									Log.v(TAG,"readCookie: cookie ip: "+ atlas_cookie_ip);
+//								}
+//								else{
+//									atlas_cookie = "";
+//									atlas_cookie_time_of_last_update = 0;
+//									atlas_cookie_networkType = 0;
+//									atlas_cookie_ip = "";
+//									showSSO();
+//								}
+//							}
+//							else{
+//								atlas_cookie = "";
+//								atlas_cookie_time_of_last_update = 0;
+//								atlas_cookie_networkType = 0;
+//								atlas_cookie_ip = "";
+//								showSSO();
+//							}
+//						}
+//						else{
+//							atlas_cookie = "";
+//							atlas_cookie_time_of_last_update = 0;
+//							atlas_cookie_networkType = 0;
+//							atlas_cookie_ip = "";
+//							showSSO();
+//						}
+//					}
+//					else{
+//						atlas_cookie = "";
+//						atlas_cookie_time_of_last_update = 0;
+//						atlas_cookie_networkType = 0;
+//						atlas_cookie_ip = "";
+//						showSSO();
+//					}
+//					
+//				}
+//			}
+//			
+//		} catch (Exception e) {
+//			atlas_cookie = "";
+//			atlas_cookie_time_of_last_update = 0;
+//			atlas_cookie_networkType = 0;
+//			atlas_cookie_ip = "";
+//			showSSO();
+//		} finally {
+//			if (reader != null){
+//				try {
+//					reader.close();
+//				} catch (IOException e){
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//	}
 	
 	private void getNewISInfoUpdaterThread(){
 		//Log.v(TAG,"getNewISInfoUpdaterThread: inside");
@@ -482,12 +467,21 @@ public class MainActivity extends Activity {
 	}
 	
 	
-	private void showSSO(){
+	public void showSSO(){
 		if(!LoginActivity.isActive){
-			is_info_thread.pauseUpdate(true);
+			Log.v(TAG,"showSSO: starting Login");
+			if(is_info_thread != null)
+				is_info_thread.pauseUpdate(true);
 			//Log.v(TAG,"onCreate: create LoginActivity");
 	        Intent loginIntent = new Intent(this,LoginActivity.class);
 	        startActivityForResult(loginIntent,GET_COOKIE);
+		}
+	}
+	
+	public void unpauseThread(){
+		if(is_info_thread.pauseUpdate()){
+			is_info_thread.pauseUpdate(false);
+        	is_info_thread.interrupt();
 		}
 	}
 	

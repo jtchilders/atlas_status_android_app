@@ -80,9 +80,10 @@ public class ISInfoUpdaterThread extends Thread {
 			
 			while(pauseUpdate){
 				try {
+					Log.v(TAG,"run: tread is paused");
 					Thread.sleep(500*1000);
 				} catch (InterruptedException e) {
-					//Log.v(TAG,"run: received interrupt from wait, continuing");
+					Log.v(TAG,"run: received interrupt from wait, continuing");
 					pauseUpdate = false;
 					
 					if(!doUpdate){
