@@ -22,7 +22,7 @@ public class MainActivity extends FragmentActivity {
 	private UserInfoUpdateHandler is_thread_handler = null;
 	
 	
-	public static String TDAQ_PARTITION = "ATLAS_mirror";
+	public static String TDAQ_PARTITION = "ATLAS";
 	public static String INITIAL_PARTITION = "initial";
 	
 	private IntentFilter intent_filter = null;

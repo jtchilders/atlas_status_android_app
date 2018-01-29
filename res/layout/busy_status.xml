@@ -7,7 +7,7 @@
    android:orientation="vertical"
    >
    
-	<TextView 
+	<com.parton.atlasStatus.MyTextView 
 		android:id="@+id/busy_final_veto_label"
 		android:layout_width="fill_parent"
 		android:layout_weight="1"
@@ -67,7 +67,7 @@
 		android:baselineAligned="false"
 		 >
       
-		<TextView 
+		<com.parton.atlasStatus.MyTextView 
 		   android:id="@+id/busy_ctp_backplane_label"
 		   android:layout_weight="1"
 		   android:layout_width="0dp"
@@ -80,7 +80,7 @@
 		   />
 		
 		
-	   <TextView 
+	   <com.parton.atlasStatus.MyTextView 
 	      android:id="@+id/busy_ctp_deadtime_label"
 	      android:layout_weight="1"
 	      android:layout_width="0dp"
@@ -200,7 +200,7 @@
 	      custom:text_mode="TEXT_NAME"
 	      />
       
-      <TextView 
+      <com.parton.atlasStatus.MyTextView 
       	android:id="@+id/busy_row5_empty_textview"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -221,7 +221,7 @@
       android:baselineAligned="false"
       >
       
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
 	      android:id="@+id/busy_ctpout12_label"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -233,7 +233,7 @@
 	      android:gravity="center_horizontal|center_vertical"
 	      />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
 	      android:id="@+id/busy_ctpout13_label"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -244,7 +244,7 @@
          android:gravity="center_horizontal|center_vertical"
 	      />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
 	      android:id="@+id/busy_ctpout14_label"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -541,7 +541,7 @@
       android:baselineAligned="false"
       >
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
 	      android:id="@+id/busy_ctpout15_label"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -553,7 +553,7 @@
 	      android:gravity="center_horizontal|center_vertical"
 	      />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
          android:id="@+id/busy_ctpmi_label"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -564,7 +564,7 @@
          android:gravity="center_horizontal|center_vertical"
          />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
          android:id="@+id/busy_ctpcore_label"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -726,7 +726,7 @@
          custom:text_mode="TEXT_NAME"
          />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
    		android:id="@+id/busy_row15_empty_textview"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -776,7 +776,7 @@
          custom:text_mode="TEXT_NAME"
          />
    	
-      <TextView 
+      <com.parton.atlasStatus.MyTextView 
          android:id="@+id/busy_row16_empty_textview"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -812,7 +812,7 @@
          custom:text_mode="TEXT_NAME"
          />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
          android:id="@+id/busy_row17_empty1_textview"
          android:layout_weight="1"
          android:layout_width="0dp"
@@ -821,7 +821,7 @@
          android:text="@string/empty"
          />
    	
-   	<TextView 
+   	<com.parton.atlasStatus.MyTextView 
          android:id="@+id/busy_row17_empty2_textview"
          android:layout_weight="1"
          android:layout_width="0dp"

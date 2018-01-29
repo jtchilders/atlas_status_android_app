@@ -21,6 +21,38 @@ public class GlobalStatusFragment extends Fragment {
 		
 		View view = inflater.inflate(R.layout.global_status, container, false);
 		
+//		if(view instanceof LinearLayout){
+//			Log.v(TAG,"onCreateView: in linearlayout");
+//			LinearLayout top_layout = (LinearLayout)view;
+//			Log.v(TAG,"onCreateView: top_layout: "+top_layout.getChildCount());
+//			
+//			final double scaler = 0.8;
+//			for(int i = 0;i<top_layout.getChildCount();++i){
+//				View child = top_layout.getChildAt(i);
+//				Log.v(TAG,"onCreateView: child: i = "+i);
+//				if(child instanceof LinearLayout){
+//					Log.v(TAG,"onCreateView: child is linearlayout");
+//					LinearLayout layout = (LinearLayout)child;
+//					for(int j=0;j<layout.getChildCount();++j){
+//						Log.v(TAG,"onCreateView: layout_child: j = "+j);
+//						View layout_child = layout.getChildAt(j);
+//						if(layout_child instanceof TextView){
+//							Log.v(TAG,"onCreateView: layout_child is textview ");
+//							TextView text_view = (TextView)layout_child;
+//							Log.v(TAG,"onCreateView: height = "+text_view.get);
+//							text_view.setTextSize((float) (text_view.getHeight()*scaler));
+//						}
+//					}
+//				}
+//				else if(child instanceof TextView){
+//					Log.v(TAG,"onCreateView: child is textview");
+//					TextView text_view = (TextView)child;
+//					Log.v(TAG,"onCreateView: "+child.getHeight());
+//					text_view.setTextSize((float) (text_view.getHeight()*scaler));
+//				}
+//			}
+//		}
+//		
         return view;
     }
 	
