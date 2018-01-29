@@ -8,6 +8,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import android.content.SharedPreferences;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class ISInfoUpdaterThread extends Thread {
 	
@@ -88,16 +89,16 @@ public class ISInfoUpdaterThread extends Thread {
 	public void run(){
 		while(doUpdate){
 			while(pauseUpdate){
-//				Log.v(TAG,"run: inside pauseUpdate");
+				Log.v(TAG,"run: inside pauseUpdate");
 				try {
-//					Log.v(TAG,"run: tread is paused");
+					Log.v(TAG,"run: tread is paused");
 					Thread.sleep(500*1000);
 				} catch (InterruptedException e) {
-//					Log.v(TAG,"run: received interrupt from wait, continuing");
+					Log.v(TAG,"run: received interrupt from wait, continuing");
 					pauseUpdate = false;
 					
 					if(!doUpdate){
-//						Log.v(TAG,"run: should not update again, exiting");
+						Log.v(TAG,"run: should not update again, exiting");
 						return;
 					}
 					
@@ -107,7 +108,7 @@ public class ISInfoUpdaterThread extends Thread {
 			
 			// check for network connection
 			if(!NetworkStatusChecker.isConnected(ParentActivity)){
-//				Log.v("ISInfoUpdaterThread","is not connected send message");
+				Log.v("ISInfoUpdaterThread","is not connected send message");
 				// send a message to print no connection
 				Message msg = new Message();
 				msg.arg1 = NO_CONNECTION;
@@ -131,10 +132,10 @@ public class ISInfoUpdaterThread extends Thread {
 //					Log.v(TAG,"run: inside loop over is info list");
 					ISInfo tmp = (ISInfo) ISInfoList.values().toArray()[i];
 					try {
-//						Log.v(TAG,"run: updating is info");
+						Log.v(TAG,"run: updating is info");
 						int returnValue = tmp.update();
 						if(returnValue == ISInfo.XML_EMPTY){
-//							Log.w(TAG,"run: ISInfo returned empty xml");
+							Log.w(TAG,"run: ISInfo returned empty xml");
 							continue;
 						}
 						else if(returnValue == ISInfo.XML_IS_SSO){
@@ -164,7 +165,7 @@ public class ISInfoUpdaterThread extends Thread {
 		        
 				udpateAvailable = true;
 				
-//				Log.v(TAG,"run: send message to update views");
+				Log.v(TAG,"run: send message to update views");
 				// send a message to update the views
 				Message msg = new Message();
 				msg.arg1 = UPDATE_VIEWS;
@@ -205,6 +206,14 @@ public class ISInfoUpdaterThread extends Thread {
         addISInfo("lhc_beam_mode", lhc_beam_mode);
         ISInfo l1ct_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT-History","ISCTPBUSY",ParentActivity.cern_cookie());
         addISInfo("l1ct_busy_status", l1ct_busy_status);
+        ISInfo l1ct_ctpout12_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_12",ParentActivity.cern_cookie());
+        addISInfo("l1ct_ctpout12_busy_status", l1ct_ctpout12_busy_status);
+        ISInfo l1ct_ctpout13_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_13",ParentActivity.cern_cookie());
+        addISInfo("l1ct_ctpout13_busy_status", l1ct_ctpout13_busy_status);
+        ISInfo l1ct_ctpout14_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_14",ParentActivity.cern_cookie());
+        addISInfo("l1ct_ctpout14_busy_status", l1ct_ctpout14_busy_status);
+        ISInfo l1ct_ctpout15_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_15",ParentActivity.cern_cookie());
+        addISInfo("l1ct_ctpout15_busy_status", l1ct_ctpout15_busy_status);
 	}
 	
 	public void UpdateSyncFrequency(){
@@ -217,5 +226,5 @@ public class ISInfoUpdaterThread extends Thread {
 		}
 	}
 	
-//	private final String TAG = "ISInforUpdaterThread";
+	private final String TAG = "ISInforUpdaterThread";
 }

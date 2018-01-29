@@ -10,14 +10,15 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 
 
+
 public class ISInfo {
 	
 	public final static int XML_EMPTY = -1;
 	public final static int XML_IS_SSO = -2;
 	
 	private WebIsRetriever webis = null;
-	private HashMap<String, IS_XML_Attr> attributes = new HashMap<String, IS_XML_Attr>();
-	public IS_XML_Attr getAttr(String key){
+	private HashMap<String, ISObjectAttr> attributes = new HashMap<String, ISObjectAttr>();
+	public ISObjectAttr getAttr(String key){
 		return attributes.get(key);
 	}
 	
@@ -83,16 +84,16 @@ public class ISInfo {
 		xpp.setInput(new StringReader(xml));
 
 		int eventType = xpp.getEventType();
-		IS_XML_Attr attr = null;
+		ISObjectAttr attr = null;
 		while (eventType != XmlPullParser.END_DOCUMENT) {
 //			if(eventType == XmlPullParser.START_DOCUMENT) {
 //				Log.v(TAG,"update: Start document");
-//			} else 
+//			} 
 			if(eventType == XmlPullParser.START_TAG) {
 //				Log.v(TAG,"update: Start tag "+xpp.getName());
 				if(xpp.getName().contains("attr")){
 //					Log.v(TAG,"update: In tag attr");
-					attr = new IS_XML_Attr();
+					attr = new ISObjectAttr();
 					for(int i=0;i<xpp.getAttributeCount();++i){
 //						Log.v(TAG,"update: Setting attribute "+xpp.getAttributeName(i)+"="+xpp.getAttributeValue(i));
 						attr.setValue(xpp.getAttributeName(i), xpp.getAttributeValue(i));
@@ -141,13 +142,14 @@ public class ISInfo {
 									text = tmp;
 								}
 							}
-								
-							attr.value(text);
+							
+							attr.addValue(text);
 						}
 					}
 				}
 
-			} else if(eventType == XmlPullParser.END_TAG) {
+			} 
+			else if(eventType == XmlPullParser.END_TAG) {
 //				Log.v(TAG,"update: End tag "+xpp.getName());
 				if(xpp.getName().contains("attr")){
 					attributes.put(attr.name(),attr);

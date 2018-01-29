@@ -52,5 +52,15 @@
    <string name="atlas_ready4physics">ATLAS Ready</string>
    <string name="lhc_stable_beams_flag">LHC Stable Beams</string>
    <string name="lhc_beam_mode">LHC Beam Mode</string>
+   
+   <string name="busy_final_veto_label">Final Trigger Veto</string>
+   <string name="busy_ctp_backplane_label">CTP Backplane</string>
+   <string name="busy_ctp_deadtime_label">Deadtime</string>
+   <string name="busy_ctpout12_label">CTPOUT12</string>
+   <string name="busy_ctpout13_label">CTPOUT13</string>
+   <string name="busy_ctpout14_label">CTPOUT14</string>
+   <string name="busy_ctpout15_label">CTPOUT15</string>
+   <string name="busy_ctpmi_label">CTPMI</string>
+   <string name="busy_ctpcore_label">CTPCORE</string>
 
 </resources>

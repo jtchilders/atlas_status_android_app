@@ -1,6 +1,8 @@
 package com.parton.atlasStatus;
 
-public class IS_XML_Attr {
+import java.util.ArrayList;
+
+public class ISObjectAttr {
 	private String name = "";
 	public void name(String name){
 		this.name = name;
@@ -41,12 +43,16 @@ public class IS_XML_Attr {
 		return multi;
 	}
 
-	private String value = "";
-	public void value(String value){
-		this.value = value;
+	
+	ArrayList<String> values = new ArrayList<String>();
+	public void addValue(String value){
+		values.add(value);
 	}
-	public String value(){
-		return value;
+	public String values(int i){
+		return values.get(i);
+	}
+	public int numValues(){
+		return values.size();
 	}
 	
 	public void setValue(String var_name,String var_value){
@@ -60,16 +66,16 @@ public class IS_XML_Attr {
 			this.range = var_value;
 		else if(var_name.contains("multi"))
 			this.multi = var_value;
-		else if(var_name.contains("value"))
-			this.value = var_value;
 //		else
 //			Log.e(TAG,"setValue: attribute name not found: "+var_name+"="+var_value);
 	}
 	
 	public String toString(){
-		String out = "name = "+name()+", descr = "+descr()+", type = "+type()+", range = "+range()+", multi = "+multi()+", value = "+value();
+		String out = "name = "+name()+", descr = "+descr()+", type = "+type()+", range = "+range()+", multi = "+multi()+", number of values = "+numValues();
 		return out;
 	}
 	
-//	private final String TAG = "IS_XML_Attr";
+	
+	
+//	private final String TAG = "ISObjectAttr";
 }

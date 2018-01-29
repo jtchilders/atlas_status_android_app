@@ -10,21 +10,23 @@ public class PartitionStatusView extends TextView {
 	
 	public PartitionStatusView(Context ctx, AttributeSet attrs){
 		super(ctx,attrs);
-		
+//		Log.v(TAG,"PartitionStatusView: inside 1");
 	}
 	
 
 	public PartitionStatusView(Context ctx){
 		super(ctx);
-		
+//		Log.v(TAG,"PartitionStatusView: inside 2");
 	}
 	
 	protected void onDraw(Canvas canvas){
 		super.onDraw(canvas);
+//		Log.v(TAG,"onDraw: inside");
 	}
 	
 	public void setText(String text){
 		super.setText(text);
+//		Log.v(TAG,"setText: inside");
 		setBackgroundColor(text);
 	}
 	

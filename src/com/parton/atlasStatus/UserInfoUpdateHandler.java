@@ -19,6 +19,7 @@ public class UserInfoUpdateHandler extends Handler{
 	
 	public UserInfoUpdateHandler(MainActivity ParentActivity,Menu menu){
 		super();
+//		Log.v(TAG,"UserInfoUpdateHandler: inside");
 		ParentActivity(ParentActivity);
 		menu(menu);
 		AddViews();
@@ -34,18 +35,21 @@ public class UserInfoUpdateHandler extends Handler{
 	@Override
 	public void handleMessage(Message msg){
 		if(msg.arg1 == ISInfoUpdaterThread.UPDATE_VIEWS){
+//			Log.v(TAG,"handleMessage: updating views");
 			if(msg.obj.getClass().getName().contains("java.util.HashMap")){
 				ISInfoList = (HashMap<String, ISInfo>) msg.obj;
 				updatePartitionStatusView();
 				updateTextViews();
 				updateBusyStatusTextViews();
+				updateBusyStatusProgressBars();
+//				updateBusyCtpoutEnabledProgressBars();
 				updateBkgdColorTextViews();
 				updateDetectorMaskTextViews();
 				updateMenuTime();
 			}
 		}
 		else if(msg.arg1 == ISInfoUpdaterThread.NO_CONNECTION){
-//			Log.v(TAG,"no connection message received");
+//			Log.v(TAG,"handleMessage: no connection message received");
 			NetworkStatusChecker.ShowToast(ParentActivity,"No internet connection");
 		}
 //		else if(msg.arg1 == ISInfoUpdaterThread.CONNECTION_TYPE_CHANGE){
@@ -65,17 +69,14 @@ public class UserInfoUpdateHandler extends Handler{
 		}
 	}
 	
-
-	private PartitionStatusView partitionStatusView = null;
-	public void partitionStatusView(PartitionStatusView partitionStatusView){
-		this.partitionStatusView = partitionStatusView;
-	}
-	public PartitionStatusView partitionStatusView(){
-		return partitionStatusView;
-	}
-
+	//////////////////////
+	// Partition View
+	/////////////////////////////////
 	private void updatePartitionStatusView(){
-		if(ISInfoList == null) return;
+		if(ISInfoList == null){
+//			Log.w(TAG,"updatePartitionStatusView: ISInfoList is null");
+			return;
+		}
 		
 		ISInfo info = ISInfoList.get("partition_status");
 		if(info == null){
@@ -83,36 +84,45 @@ public class UserInfoUpdateHandler extends Handler{
 			return;
 		}
 		
-		IS_XML_Attr attr = info.getAttr("state");
+		ISObjectAttr attr = info.getAttr("state");
 		if(attr == null){
 //			Log.w(TAG,"updatePartitionStatusView: no attr named: "+"state");
 			return;
 		}
 		
-		if(partitionStatusView == null){
-//			Log.w(TAG,"updatePartitionStatusView: partitionStatusView is null");
+		PartitionStatusView view = (PartitionStatusView) ParentActivity.findViewById(R.id.atlas_partition_status);
+		if(view == null){
+//			Log.w(TAG,"updatePartitionStatusView: view is null");
 			return;
 		}
 		
-		partitionStatusView.setText(attr.value());
+		view.setText(attr.values(0));
 		
 		
 	}
 	
-	private HashMap<String,HashMap<String,TextView>> simpleTextViewList = new HashMap<String,HashMap<String,TextView>>();
-	public void simpleTextViewList(String is_info_name,String is_attr_name,TextView text_view){
+
+	//////////////////////
+	// Simple Text Views
+	/////////////////////////////////
+	
+	private HashMap<String,HashMap<String,Integer>> simpleTextViewList = new HashMap<String,HashMap<String,Integer>>();
+	public void simpleTextViewList(String is_info_name,String is_attr_name,int text_view_id){
 		if(simpleTextViewList.containsKey(is_info_name)){
-			simpleTextViewList.get(is_info_name).put(is_attr_name, text_view);
+			simpleTextViewList.get(is_info_name).put(is_attr_name, text_view_id);
 		}
 		else{
-			HashMap<String,TextView> tmp = new HashMap<String,TextView>();
-			tmp.put(is_attr_name, text_view);
+			HashMap<String,Integer> tmp = new HashMap<String,Integer>();
+			tmp.put(is_attr_name, text_view_id);
 			simpleTextViewList.put(is_info_name, tmp);
 		}
 	}
 	
-	private void updateTextView(String is_info_name,String is_attr_name,TextView text_view){
-		if(ISInfoList == null) return;
+	private void updateTextView(String is_info_name,String is_attr_name,int text_view_id){
+		if(ISInfoList == null){
+//			Log.w(TAG,"updateTextView: ISInfoList is null");
+			return;
+		}
 		
 		ISInfo info = ISInfoList.get(is_info_name);
 		if(info == null){
@@ -120,18 +130,19 @@ public class UserInfoUpdateHandler extends Handler{
 			return;
 		}
 		
-		IS_XML_Attr attr = info.getAttr(is_attr_name);
+		ISObjectAttr attr = info.getAttr(is_attr_name);
 		if(attr == null){
 //			Log.w(TAG,"updateTextView: no attr named: "+is_attr_name);
 			return;
 		}
 		
-		if(text_view == null){
-//			Log.w(TAG,"updateTextView: text_view is null");
+		TextView view = (TextView)ParentActivity.findViewById(text_view_id);
+		if(view == null){
+//			Log.w(TAG,"updateTextView: view is null");
 			return;
 		}
 		
-		text_view.setText(attr.value());
+		view.setText(attr.values(0));
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -142,68 +153,76 @@ public class UserInfoUpdateHandler extends Handler{
 			HashMap<String,TextView> tmp = (HashMap<String, TextView>) simpleTextViewList.values().toArray()[i];
 			for(int j=0;j<tmp.size();++j){
 				String is_attr_name = (String) tmp.keySet().toArray()[j];
-				TextView text_view = (TextView) tmp.values().toArray()[j];
-				updateTextView(is_info_name,is_attr_name,text_view);
+				int text_view_id = (Integer) tmp.values().toArray()[j];
+				updateTextView(is_info_name,is_attr_name,text_view_id);
 			}
 		}
 	}
 	
 
-	private HashMap<String,HashMap<String,HashMap<String,TextView>>> bkgdColorTextViewList = new HashMap<String,HashMap<String,HashMap<String,TextView>>>();
-	public void bkgdColorTextViewList(String is_info_name,String is_attr_name,String attr_value_for_green,TextView text_view){
+	//////////////////////
+	// Text Views with changing background colors
+	/////////////////////////////////////////////////////
+	
+	private HashMap<String,HashMap<String,HashMap<String,Integer>>> bkgdColorTextViewList = new HashMap<String,HashMap<String,HashMap<String,Integer>>>();
+	public void bkgdColorTextViewList(String is_info_name,String is_attr_name,String attr_value_for_green,int text_view_id){
 		if(!bkgdColorTextViewList.containsKey(is_info_name)){
-			HashMap<String,TextView> innermost = new HashMap<String,TextView>();
-			innermost.put(attr_value_for_green, text_view);
+			HashMap<String,Integer> innermost = new HashMap<String,Integer>();
+			innermost.put(attr_value_for_green, text_view_id);
 			
-			HashMap<String,HashMap<String,TextView>> middle = new HashMap<String,HashMap<String,TextView>>();
+			HashMap<String,HashMap<String,Integer>> middle = new HashMap<String,HashMap<String,Integer>>();
 			middle.put(is_attr_name, innermost);
 			
 			bkgdColorTextViewList.put(is_info_name, middle);
 		}
 		else{
-			HashMap<String,HashMap<String,TextView>> middle = (HashMap<String,HashMap<String,TextView>>) bkgdColorTextViewList.get(is_info_name);
+			HashMap<String,HashMap<String,Integer>> middle = (HashMap<String,HashMap<String,Integer>>) bkgdColorTextViewList.get(is_info_name);
 			if(!middle.containsKey(is_attr_name)){
-				HashMap<String,TextView> innermost = new HashMap<String,TextView>();
-				innermost.put(attr_value_for_green, text_view);
+				HashMap<String,Integer> innermost = new HashMap<String,Integer>();
+				innermost.put(attr_value_for_green, text_view_id);
 				middle.put(is_attr_name, innermost);
 			}
 			else{
-				HashMap<String,TextView> innermost = (HashMap<String,TextView>)middle.get(is_attr_name);
+				HashMap<String,Integer> innermost = (HashMap<String,Integer>)middle.get(is_attr_name);
 				if(!innermost.containsKey(attr_value_for_green)){
-					innermost.put(attr_value_for_green, text_view);
+					innermost.put(attr_value_for_green, text_view_id);
 				}
 				else{
 					innermost.remove(attr_value_for_green);
-					innermost.put(attr_value_for_green, text_view);
+					innermost.put(attr_value_for_green, text_view_id);
 				}
 			}
 		}
 	}
 	
-	private void updateBkgdColorTextView(String is_info_name,String is_attr_name,String attr_value_for_green,TextView text_view){
-		if(ISInfoList == null) return;
+	private void updateBkgdColorTextView(String is_info_name,String is_attr_name,String attr_value_for_green,int text_view_id){
+		if(ISInfoList == null){
+//			Log.w(TAG,"updateBkgdColorTextView: ISInfoList is null");
+			return;
+		}
 		
 		ISInfo info = ISInfoList.get(is_info_name);
 		if(info == null){
-//			Log.w(TAG,"updateTextView: no ISInfo object named: "+is_info_name);
+//			Log.w(TAG,"updateBkgdColorTextView: no ISInfo object named: "+is_info_name);
 			return;
 		}
 		
-		IS_XML_Attr attr = info.getAttr(is_attr_name);
+		ISObjectAttr attr = info.getAttr(is_attr_name);
 		if(attr == null){
-//			Log.w(TAG,"updateTextView: no attr named: "+is_attr_name);
+//			Log.w(TAG,"updateBkgdColorTextView: no attr named: "+is_attr_name);
 			return;
 		}
 		
-		if(text_view == null){
-//			Log.w(TAG,"updateTextView: text_view is null");
+		TextView view = (TextView)ParentActivity.findViewById(text_view_id);
+		if(view == null){
+//			Log.w(TAG,"updateBkgdColorTextView: view is null");
 			return;
 		}
 		
-		if(attr.value().contains(attr_value_for_green))
-			text_view.setBackgroundResource(R.color.green);
+		if(attr.values(0).contains(attr_value_for_green))
+			view.setBackgroundResource(R.color.green);
 		else
-			text_view.setBackgroundResource(R.color.red);
+			view.setBackgroundResource(R.color.red);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -211,28 +230,35 @@ public class UserInfoUpdateHandler extends Handler{
 		
 		for(int i=0;i<bkgdColorTextViewList.size();++i){
 			String is_info_name = (String) bkgdColorTextViewList.keySet().toArray()[i];
-			HashMap<String, HashMap<String,TextView>> middle = (HashMap<String, HashMap<String, TextView>>) bkgdColorTextViewList.values().toArray()[i];
+			HashMap<String, HashMap<String,Integer>> middle = (HashMap<String, HashMap<String, Integer>>) bkgdColorTextViewList.values().toArray()[i];
 			for(int j=0;j<middle.size();++j){
 				String is_attr_name = (String) middle.keySet().toArray()[j];
-				HashMap<String,TextView> innermost = (HashMap<String,TextView>) middle.values().toArray()[j];
+				HashMap<String,Integer> innermost = (HashMap<String,Integer>) middle.values().toArray()[j];
 				for(int k=0;k<innermost.size();++k){
 					String attr_value_for_green = (String) innermost.keySet().toArray()[j];
-					TextView text_view = (TextView) innermost.values().toArray()[j];
-					updateBkgdColorTextView(is_info_name,is_attr_name,attr_value_for_green,text_view);
+					int text_view_id = (Integer) innermost.values().toArray()[j];
+					updateBkgdColorTextView(is_info_name,is_attr_name,attr_value_for_green,text_view_id);
 				}
 				
 			}
 		}
 	}
 	
+
+	//////////////////////
+	// Text Views for detector masks
+	/////////////////////////////////////////////////////
 	
-	private HashMap<String,TextView> detectorMaskTextViewList = new HashMap<String,TextView>();
-	public void detectorMaskTextViewList(String hw_name,TextView text_view){
-		detectorMaskTextViewList.put(hw_name, text_view);
+	private HashMap<String,Integer> detectorMaskTextViewList = new HashMap<String,Integer>();
+	public void detectorMaskTextViewList(String hw_name,int text_view_id){
+		detectorMaskTextViewList.put(hw_name, text_view_id);
 	}
 	
-	private void updateDetectorMaskTextView(String detector_name, TextView text_view){
-		if(ISInfoList == null) return;
+	private void updateDetectorMaskTextView(String detector_name, int text_view_id){
+		if(ISInfoList == null){
+//			Log.w(TAG,"updateDetectorMaskTextView: ISInfoList is null");
+			return;
+		}
 		
 		String is_info_name = "run_parameters";
 		String is_attr_name = "detector_mask";
@@ -242,33 +268,38 @@ public class UserInfoUpdateHandler extends Handler{
 			return;
 		}
 		
-		IS_XML_Attr attr = info.getAttr(is_attr_name);
+		ISObjectAttr attr = info.getAttr(is_attr_name);
 		if(attr == null){
 //			Log.w(TAG,"updateDetectorMaskTextView: no attr named: "+is_attr_name);
 			return;
 		}
 		
-		if(text_view == null){
+		TextView view = (TextView)ParentActivity.findViewById(text_view_id);
+		if(view == null){
 //			Log.w(TAG,"updateDetectorMaskTextView: text_view is null");
 			return;
 		}
 		
-		DetectorMaskDecoder detMask = new DetectorMaskDecoder(attr.value());
+		DetectorMaskDecoder detMask = new DetectorMaskDecoder(attr.values(0));
 		
 		if(detMask.isIncluded(detector_name))
-			text_view.setBackgroundResource(R.color.detector_included);
+			view.setBackgroundResource(R.color.detector_included);
 		else
-			text_view.setBackgroundResource(R.color.detector_excluded);
+			view.setBackgroundResource(R.color.detector_excluded);
 	}
 
 	private void updateDetectorMaskTextViews(){
 		
 		for(int i=0;i<detectorMaskTextViewList.size();++i){
 			String hw_name = (String) detectorMaskTextViewList.keySet().toArray()[i];
-			TextView text_view = (TextView) detectorMaskTextViewList.values().toArray()[i];
-			updateDetectorMaskTextView(hw_name,text_view);
+			int text_view_id = (Integer) detectorMaskTextViewList.values().toArray()[i];
+			updateDetectorMaskTextView(hw_name,text_view_id);
 		}
 	}
+
+	//////////////////////
+	// Update Menu to read last update time
+	/////////////////////////////////////////////////////
 	
 	private Menu menu = null;
 	public void menu(Menu menu){
@@ -292,13 +323,19 @@ public class UserInfoUpdateHandler extends Handler{
 //			Log.w(TAG,"updateMenuTime: menu not set");
 	}
 	
+	
+
+	//////////////////////
+	// Text Views for Busy Status
+	/////////////////////////////////////////////////////
+	
 	private final float busy_warning_level = 5; // % busy
-	private HashMap<String,TextView> busyStatusTextViewList = new HashMap<String,TextView>();
-	public void busyStatusTextViewList(String is_attr_name,TextView text_view){
-		busyStatusTextViewList.put(is_attr_name, text_view);
+	private HashMap<String,Integer> busyStatusTextViewList = new HashMap<String,Integer>();
+	public void busyStatusTextViewList(String is_attr_name,int text_view_id){
+		busyStatusTextViewList.put(is_attr_name, text_view_id);
 	}
 	
-	public void updateBusyStatusTextView(String is_attr_name,TextView text_view){
+	public void updateBusyStatusTextView(String is_attr_name,int text_view_id){
 		if(ISInfoList == null)
 			return;
 		
@@ -309,24 +346,25 @@ public class UserInfoUpdateHandler extends Handler{
 			return;
 		}
 		
-		IS_XML_Attr attr = info.getAttr(is_attr_name);
+		ISObjectAttr attr = info.getAttr(is_attr_name);
 		if(attr == null){
 //			Log.w(TAG,"busyStatusTextViewList: no attr named: "+is_attr_name);
 			return;
 		}
 		
-		if(text_view == null){
-//			Log.w(TAG,"busyStatusTextViewList: text_view is null");
+		TextView view = (TextView)ParentActivity.findViewById(text_view_id);
+		if(view == null){
+//			Log.w(TAG,"busyStatusTextViewList: view is null");
 			return;
 		}
 		
-		text_view.setText(attr.value().substring(0,3)+"%");
-		float busy = Float.parseFloat(attr.value());
+		view.setText(attr.values(0).substring(0,3)+"%");
+		float busy = Float.parseFloat(attr.values(0));
 		if(busy > busy_warning_level){
-			text_view.setTextColor(ParentActivity.getResources().getColor(R.color.red));
+			view.setTextColor(ParentActivity.getResources().getColor(R.color.red));
 		}
 		else{
-			text_view.setTextColor(ParentActivity.getResources().getColor(R.color.green));
+			view.setTextColor(ParentActivity.getResources().getColor(R.color.green));
 		}
 		
 		
@@ -336,81 +374,272 @@ public class UserInfoUpdateHandler extends Handler{
 		
 		for(int i=0;i<busyStatusTextViewList.size();++i){
 			String attr_name = (String) busyStatusTextViewList.keySet().toArray()[i];
-			TextView text_view = (TextView) busyStatusTextViewList.values().toArray()[i];
-			updateBusyStatusTextView(attr_name,text_view);
+			int text_view_id = (Integer) busyStatusTextViewList.values().toArray()[i];
+			updateBusyStatusTextView(attr_name,text_view_id);
 		}
 	}
 	
-	private void AddViews(){
-		PartitionStatusView partition_status_view = (PartitionStatusView) ParentActivity.findViewById(R.id.atlas_partition_status);
-		TextView run_number_view = (TextView) ParentActivity.findViewById(R.id.atlas_run_number);
-		TextView project_tag_view = (TextView) ParentActivity.findViewById(R.id.atlas_project_tag);
-		TextView partition_start_time_view = (TextView) ParentActivity.findViewById(R.id.atlas_partition_start_time);
-		TextView lhc_page_one_status_time_view = (TextView) ParentActivity.findViewById(R.id.lhc_page_one_status_time);
-		TextView lhc_page_one_status_view = (TextView) ParentActivity.findViewById(R.id.lhc_page_one_status);
-		TextView atlas_included_hw_muctpi = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_muctpi);
-		TextView atlas_included_hw_ctp = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_ctp);
-		TextView atlas_included_hw_l1calo = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_l1calo);
-		TextView atlas_included_hw_hlt = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_hlt);
-		TextView atlas_included_hw_rpc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_rpc);
-		TextView atlas_included_hw_tgc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_tgc);
-		TextView atlas_included_hw_mdt = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_mdt);
-		TextView atlas_included_hw_csc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_csc);
-		TextView atlas_included_hw_lar = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_lar);
-		TextView atlas_included_hw_tile = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_tile);
-		TextView atlas_included_hw_pix = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_pix);
-		TextView atlas_included_hw_sct = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_sct);
-		TextView atlas_included_hw_trt = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_trt);
-		TextView atlas_included_hw_lucid = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_lucid);
-		TextView atlas_included_hw_bcm = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_bcm);
-		TextView atlas_included_hw_alfa = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_alfa);
-		TextView atlas_included_hw_zdc = (TextView) ParentActivity.findViewById(R.id.atlas_included_hw_zdc);
-		TextView atlas_ready4physics_view = (TextView) ParentActivity.findViewById(R.id.atlas_ready4physics);
-		TextView lhc_stable_beams_flag_view = (TextView) ParentActivity.findViewById(R.id.lhc_stable_beams_flag);
-		TextView lhc_beam_mode_view = (TextView) ParentActivity.findViewById(R.id.lhc_beam_mode);
+
+	//////////////////////
+	// Progress Bars for Busy Status
+	/////////////////////////////////////////////////////
+	private HashMap<String,Integer> busyStatusProgressBarList = new HashMap<String,Integer>();
+	public void busyStatusProgressBarList(String is_attr_name,int id){
+		busyStatusProgressBarList.put(is_attr_name, id);
+	}
+	
+	public void updateBusyStatusProgressBar(String is_attr_name,int id){
+		if(ISInfoList == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: ISInfoList is null");
+			return;
+		}
 		
-		// busy
-		TextView busy_summary_high = (TextView) ParentActivity.findViewById(R.id.busy_summary_high);
-		TextView busy_summary_low = (TextView) ParentActivity.findViewById(R.id.busy_summary_low);
+		String is_info_name = "l1ct_busy_status";
+		ISInfo info = ISInfoList.get(is_info_name);
+		if(info == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: no ISInfo object named: "+is_info_name);
+			return;
+		}
+
+		int valueIndex = 0;
+		String is_attr_name_real = is_attr_name;
+		if(is_attr_name.contains("ctpout_12")){
+			is_attr_name_real = "ctpout_12";
+			if(is_attr_name.contains("ctpout_12_1"))
+					valueIndex = 1;
+			else if(is_attr_name.contains("ctpout_12_2"))
+					valueIndex = 2;
+			else if(is_attr_name.contains("ctpout_12_3"))
+					valueIndex = 3;
+			else if(is_attr_name.contains("ctpout_12_4"))
+					valueIndex = 4;
+		}
+		else if(is_attr_name.contains("ctpout_13")){
+			is_attr_name_real = "ctpout_13";
+			if(is_attr_name.contains("ctpout_13_1"))
+				valueIndex = 1;
+			else if(is_attr_name.contains("ctpout_13_2"))
+				valueIndex = 2;
+			else if(is_attr_name.contains("ctpout_13_3"))
+				valueIndex = 3;
+			else if(is_attr_name.contains("ctpout_13_4"))
+				valueIndex = 4;
+		}
+		else if(is_attr_name.contains("ctpout_14")){
+			is_attr_name_real = "ctpout_14";
+			if(is_attr_name.contains("ctpout_14_1"))
+				valueIndex = 1;
+			else if(is_attr_name.contains("ctpout_14_2"))
+				valueIndex = 2;
+			else if(is_attr_name.contains("ctpout_14_3"))
+				valueIndex = 3;
+			else if(is_attr_name.contains("ctpout_14_4"))
+				valueIndex = 4;
+		}
+		else if(is_attr_name.contains("ctpout_15")){
+			is_attr_name_real = "ctpout_15";
+			if(is_attr_name.contains("ctpout_15_1"))
+				valueIndex = 1;
+			else if(is_attr_name.contains("ctpout_15_2"))
+				valueIndex = 2;
+			else if(is_attr_name.contains("ctpout_15_3"))
+				valueIndex = 3;
+			else if(is_attr_name.contains("ctpout_15_4"))
+				valueIndex = 4;
+		}
+		
+		ISObjectAttr attr = info.getAttr(is_attr_name_real);
+		if(attr == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: no attr named: "+is_attr_name);
+			return;
+		}
 		
 
-		// partition status
-		partitionStatusView(partition_status_view);
+		TextProgressBar view = (TextProgressBar)ParentActivity.findViewById(id);
+		if(view == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: view is null");
+			return;
+		}
 		
+			
+		
+		float busy = Float.parseFloat(attr.values(valueIndex));
+		view.setProgress((int) busy);
+		view.setText(attr.values(valueIndex).substring(0,3)+"%");
+		
+		if(busy > busy_warning_level){
+			view.setTextColor(ParentActivity.getResources().getColor(R.color.red));
+		}
+		else{
+			view.setTextColor(ParentActivity.getResources().getColor(R.color.green));
+		}
+		
+		
+	}
+
+	private void updateBusyStatusProgressBars(){
+//		Log.v(TAG,"updateBusyStatusProgressBars: inside");
+		
+		for(int i=0;i<busyStatusProgressBarList.size();++i){
+			String attr_name = (String) busyStatusProgressBarList.keySet().toArray()[i];
+			int text_view_id = (Integer) busyStatusProgressBarList.values().toArray()[i];
+			updateBusyStatusProgressBar(attr_name,text_view_id);
+		}
+	}
+	
+
+	//////////////////////
+	// Progress Bars for Busy Status ( Names and enabled )
+	/////////////////////////////////////////////////////
+	private HashMap<String,HashMap<String,Integer>> busyCtpoutEnabledProgressBarList = new HashMap<String,HashMap<String,Integer>>();
+	public void busyCtpoutEnabledProgressBarList(String is_info_name,String is_attr_name,int id){
+		if(!busyCtpoutEnabledProgressBarList.containsKey(is_info_name)){
+			HashMap<String,Integer> inner = new HashMap<String,Integer>();
+			inner.put(is_attr_name, id);
+			
+			busyCtpoutEnabledProgressBarList.put(is_attr_name, inner);
+		}
+		else{
+			HashMap<String,Integer> inner = (HashMap<String,Integer>) busyCtpoutEnabledProgressBarList.get(is_info_name);
+			if(!inner.containsKey(is_attr_name)){
+				inner.put(is_attr_name, id);
+			}
+			else{
+				inner.remove(is_attr_name);
+				inner.put(is_attr_name, id);
+				
+			}
+		}
+	}
+	
+	public void updateBusyCtpoutEnabledProgressBar(String is_info_name, String is_attr_name,int id){
+		if(ISInfoList == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: ISInfoList is null");
+			return;
+		}
+		
+		ISInfo info = ISInfoList.get(is_info_name);
+		if(info == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: no ISInfo object named: "+is_info_name);
+			return;
+		}
+
+		
+		ISObjectAttr attr = info.getAttr(is_attr_name);
+		if(attr == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: no attr named: "+is_attr_name);
+			return;
+		}
+		
+
+		TextProgressBar view = (TextProgressBar)ParentActivity.findViewById(id);
+		if(view == null){
+//			Log.w(TAG,"updateBusyStatusProgressBar: view is null");
+			return;
+		}
+		
+			
+		view.setText(attr.values(0));
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	private void updateBusyCtpoutEnabledProgressBars(){
+//		Log.v(TAG,"updateBusyStatusProgressBars: inside");
+		
+		for(int i=0;i<busyCtpoutEnabledProgressBarList.size();++i){
+			String info_name = (String) busyCtpoutEnabledProgressBarList.keySet().toArray()[i];
+			HashMap<String,Integer> inner = (HashMap<String,Integer>) busyCtpoutEnabledProgressBarList.values().toArray()[i];
+			for(int j=0;j<inner.size();++i){
+				String attr_name = (String) inner.keySet().toArray()[j];
+				int id = (Integer)inner.values().toArray()[j];
+				updateBusyCtpoutEnabledProgressBar(info_name,attr_name,id);
+			}
+		}
+	}
+	
+	
+	private void AddViews(){
+//		Log.v(TAG,"AddViews: inside");
+
 		// some run information
-		simpleTextViewList("run_parameters", "run_number", run_number_view);
-		simpleTextViewList("run_parameters","T0_project_tag",project_tag_view);
-		simpleTextViewList("run_parameters", "timeSOR", partition_start_time_view);
-		bkgdColorTextViewList("run_ready4physics", "value", "True", atlas_ready4physics_view);
+		simpleTextViewList("run_parameters", "run_number", R.id.atlas_run_number);
+		simpleTextViewList("run_parameters","T0_project_tag",R.id.atlas_project_tag);
+		simpleTextViewList("run_parameters", "timeSOR", R.id.atlas_partition_start_time);
+		bkgdColorTextViewList("run_ready4physics", "value", "True", R.id.atlas_ready4physics);
 		
 		// lhc status page
-		simpleTextViewList("lhc_page_one_status", "ts", lhc_page_one_status_time_view);
-		simpleTextViewList("lhc_page_one_status", "value", lhc_page_one_status_view);
-		bkgdColorTextViewList("lhc_stable_beams_flag", "value", "1", lhc_stable_beams_flag_view);
-		simpleTextViewList("lhc_beam_mode", "value", lhc_beam_mode_view);
+		simpleTextViewList("lhc_page_one_status", "ts", R.id.lhc_page_one_status_time);
+		simpleTextViewList("lhc_page_one_status", "value", R.id.lhc_page_one_status);
+		bkgdColorTextViewList("lhc_stable_beams_flag", "value", "1", R.id.lhc_stable_beams_flag);
+		simpleTextViewList("lhc_beam_mode", "value", R.id.lhc_beam_mode);
 		
 		// detector mask
-		detectorMaskTextViewList("TDAQ_MUON_CTP_INTERFACE", atlas_included_hw_muctpi);
-		detectorMaskTextViewList("TDAQ_CTP", atlas_included_hw_ctp);
-		detectorMaskTextViewList("TDAQ_CALO", atlas_included_hw_l1calo);
-		detectorMaskTextViewList("TDAQ_HLT", atlas_included_hw_hlt);
-		detectorMaskTextViewList("MUON_RPC", atlas_included_hw_rpc);
-		detectorMaskTextViewList("MUON_TGC", atlas_included_hw_tgc);
-		detectorMaskTextViewList("MUON_MDT", atlas_included_hw_mdt);
-		detectorMaskTextViewList("MUON_CSC", atlas_included_hw_csc);
-		detectorMaskTextViewList("LAR", atlas_included_hw_lar);
-		detectorMaskTextViewList("TILECAL", atlas_included_hw_tile);
-		detectorMaskTextViewList("PIXEL", atlas_included_hw_pix);
-		detectorMaskTextViewList("SCT", atlas_included_hw_sct);
-		detectorMaskTextViewList("TRT", atlas_included_hw_trt);
-		detectorMaskTextViewList("FORWARD_LUCID", atlas_included_hw_lucid);
-		detectorMaskTextViewList("FORWARD_BCM", atlas_included_hw_bcm);
-		detectorMaskTextViewList("FORWARD_ALFA", atlas_included_hw_alfa);
-		detectorMaskTextViewList("FORWARD_ZDC", atlas_included_hw_zdc);
+		detectorMaskTextViewList("TDAQ_MUON_CTP_INTERFACE", R.id.atlas_included_hw_muctpi);
+		detectorMaskTextViewList("TDAQ_CTP", R.id.atlas_included_hw_ctp);
+		detectorMaskTextViewList("TDAQ_CALO", R.id.atlas_included_hw_l1calo);
+		detectorMaskTextViewList("TDAQ_HLT", R.id.atlas_included_hw_hlt);
+		detectorMaskTextViewList("MUON_RPC", R.id.atlas_included_hw_rpc);
+		detectorMaskTextViewList("MUON_TGC", R.id.atlas_included_hw_tgc);
+		detectorMaskTextViewList("MUON_MDT", R.id.atlas_included_hw_mdt);
+		detectorMaskTextViewList("MUON_CSC", R.id.atlas_included_hw_csc);
+		detectorMaskTextViewList("LAR", R.id.atlas_included_hw_lar);
+		detectorMaskTextViewList("TILECAL", R.id.atlas_included_hw_tile);
+		detectorMaskTextViewList("PIXEL", R.id.atlas_included_hw_pix);
+		detectorMaskTextViewList("SCT", R.id.atlas_included_hw_sct);
+		detectorMaskTextViewList("TRT", R.id.atlas_included_hw_trt);
+		detectorMaskTextViewList("FORWARD_LUCID", R.id.atlas_included_hw_lucid);
+		detectorMaskTextViewList("FORWARD_BCM", R.id.atlas_included_hw_bcm);
+		detectorMaskTextViewList("FORWARD_ALFA", R.id.atlas_included_hw_alfa);
+		detectorMaskTextViewList("FORWARD_ZDC", R.id.atlas_included_hw_zdc);
 		
 		// busy status
-		busyStatusTextViewList("ctpcore_moni0_rate", busy_summary_low);
-		busyStatusTextViewList("ctpcore_moni1_rate", busy_summary_high);
+		busyStatusTextViewList("ctpcore_moni0_rate", R.id.busy_summary_low);
+		busyStatusTextViewList("ctpcore_moni1_rate", R.id.busy_summary_high);
+
+		busyStatusProgressBarList("ctpcore_moni0_rate", R.id.busy_ctpcore_moni0_rate);
+		busyStatusProgressBarList("ctpcore_moni1_rate", R.id.busy_ctpcore_moni1_rate);
+		busyStatusProgressBarList("ctpcore_moni2_rate", R.id.busy_ctpcore_moni2_rate);
+		busyStatusProgressBarList("ctpcore_moni3_rate", R.id.busy_ctpcore_moni3_rate);
+		busyStatusProgressBarList("ctpcore_bckp_rate", R.id.busy_ctpcore_bckp_rate);
+		busyStatusProgressBarList("ctpcore_rslt_rate", R.id.busy_ctpcore_rslt_rate);
+		busyStatusProgressBarList("ctpmi_bckp_rate", R.id.busy_ctpmi_bckp_rate);
+		
+		busyStatusProgressBarList("ctpout_12_0", R.id.busy_ctpout_12_0_rate);
+		busyStatusProgressBarList("ctpout_12_1", R.id.busy_ctpout_12_1_rate);
+		busyStatusProgressBarList("ctpout_12_2", R.id.busy_ctpout_12_2_rate);
+		busyStatusProgressBarList("ctpout_12_3", R.id.busy_ctpout_12_3_rate);
+		busyStatusProgressBarList("ctpout_12_4", R.id.busy_ctpout_12_4_rate);
+
+		busyStatusProgressBarList("ctpout_13_0_rate", R.id.busy_ctpout_13_0_rate);
+		busyStatusProgressBarList("ctpout_13_1_rate", R.id.busy_ctpout_13_1_rate);
+		busyStatusProgressBarList("ctpout_13_2_rate", R.id.busy_ctpout_13_2_rate);
+		busyStatusProgressBarList("ctpout_13_3_rate", R.id.busy_ctpout_13_3_rate);
+		busyStatusProgressBarList("ctpout_13_4_rate", R.id.busy_ctpout_13_4_rate);
+
+		busyStatusProgressBarList("ctpout_14_0_rate", R.id.busy_ctpout_14_0_rate);
+		busyStatusProgressBarList("ctpout_14_1_rate", R.id.busy_ctpout_14_1_rate);
+		busyStatusProgressBarList("ctpout_14_2_rate", R.id.busy_ctpout_14_2_rate);
+		busyStatusProgressBarList("ctpout_14_3_rate", R.id.busy_ctpout_14_3_rate);
+		busyStatusProgressBarList("ctpout_14_4_rate", R.id.busy_ctpout_14_4_rate);
+
+		busyStatusProgressBarList("ctpout_15_0_rate", R.id.busy_ctpout_15_0_rate);
+		busyStatusProgressBarList("ctpout_15_1_rate", R.id.busy_ctpout_15_1_rate);
+		busyStatusProgressBarList("ctpout_15_2_rate", R.id.busy_ctpout_15_2_rate);
+		busyStatusProgressBarList("ctpout_15_3_rate", R.id.busy_ctpout_15_3_rate);
+		busyStatusProgressBarList("ctpout_15_4_rate", R.id.busy_ctpout_15_4_rate);
+
+		busyStatusProgressBarList("ctpmi_vme_rate", R.id.busy_ctpmi_vme_rate);
+		busyStatusProgressBarList("ctpmi_ecr_rate", R.id.busy_ctpmi_ecr_rate);
+		busyStatusProgressBarList("ctpmi_vto0_rate", R.id.busy_ctpmi_vto0_rate);
+		busyStatusProgressBarList("ctpmi_vto1_rate", R.id.busy_ctpmi_vto1_rate);
+		
+		busyStatusProgressBarList("ctpcore_rdt_rate", R.id.busy_ctpcore_rdt_rate);
+		busyStatusProgressBarList("ctpcore_mon_rate", R.id.busy_ctpcore_mon_rate);
+		
+		//busyCtpoutEnabledProgressBarList("l1ct_ctpout12_busy_status","connector0_name",R.id.busy_ctpout_12_0_rate);
+		
+		
 	}
 	
 	

@@ -2,4 +2,6 @@
 <resources>
    <declare-styleable name="PartitionStatusView">
    </declare-styleable>
+   <declare-styleable name="TextProgressBar">
+   </declare-styleable>
 </resources>
