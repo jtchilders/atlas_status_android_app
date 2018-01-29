@@ -11,13 +11,14 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 
 
+
 public class ISInfo {
 	
 	public final static int XML_EMPTY = -1;
 	public final static int XML_IS_SSO = -2;
 	
 	private WebIsRetriever webis = null;
-	private HashMap<String, ISObjectAttr> attributes = new HashMap<String, ISObjectAttr>();
+	protected HashMap<String, ISObjectAttr> attributes = new HashMap<String, ISObjectAttr>();
 	public ISObjectAttr getAttr(String key){
 		return attributes.get(key);
 	}
@@ -52,6 +53,8 @@ public class ISInfo {
 	public String info_name(){
 		return info_name;
 	}
+	
+	
 
 	public ISInfo(String partition, String provider, String info_name, CernCookie cookie){ 
 		provider(provider);
@@ -172,11 +175,17 @@ public class ISInfo {
 //			Log.v(TAG,"update:     attr: "+attr.toString());
 //		}
 		
+		updateViews();
+		
 		return 0;
 	}
 	
 	public void updateCookie(CernCookie cookie){
 		webis.cookie(cookie);
+	}
+	
+	protected void updateViews(){
+//		Log.v(TAG,"updateViews: inside");
 	}
 
 

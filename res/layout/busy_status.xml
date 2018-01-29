@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:custom="http://schemas.android.com/apk/res/com.parton.atlasStatus"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
    android:background="@drawable/atlas_logo_opacity10" 
@@ -10,8 +11,11 @@
 		android:id="@+id/busy_final_veto_label"
 		android:layout_width="fill_parent"
 		android:layout_height="25dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
 		android:text="@string/busy_final_veto_label"
 		android:textSize="20dp"
+      android:gravity="center_horizontal|center_vertical" 
 		/>
 	
 	<LinearLayout 
@@ -20,7 +24,7 @@
 		android:layout_height="25dp"
 		android:orientation="horizontal"
 		 >
-		<com.parton.atlasStatus.TextProgressBar android:id="@+id/busy_ctpcore_moni0_rate"
+		<com.parton.atlasStatus.BusyStatusBar android:id="@+id/busy_ctpcore_moni0_rate"
 			android:layout_weight="1"
 	      android:layout_width="0dp"
 	      android:layout_height="25dp"
@@ -29,504 +33,605 @@
 	      android:progress="0"
 	      android:max="100"
 	      style="@android:style/Widget.ProgressBar.Horizontal"
-	      
-	      />
+         custom:enabled="true"
+         custom:name="Priority Low"
+         custom:text_mode="TEXT_PERCENT"
+      
+      />
+  
+   <com.parton.atlasStatus.BusyStatusBar android:id="@+id/busy_ctpcore_moni1_rate"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="25dp"
+      android:layout_marginRight="5dp"
+      android:progress="0"
+      android:max="100"
+      style="@android:style/Widget.ProgressBar.Horizontal"
+      custom:enabled="true"
+      custom:name="Priority High"
+      custom:text_mode="TEXT_PERCENT"
+      />
+</LinearLayout>
+
+<LinearLayout 
+     android:id="@+id/busy_row2_linear_layout"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     android:baselineAligned="false"
+      >
    
-	   <com.parton.atlasStatus.TextProgressBar android:id="@+id/busy_ctpcore_moni1_rate"
-         android:layout_weight="1"
-	      android:layout_width="0dp"
+	<LinearLayout 
+      android:id="@+id/busy_ctp_backplane_linear_layout"
+      android:layout_weight="1"
+      android:layout_width="0dp"
+      android:layout_height="125dp"
+      android:layout_marginLeft="5dp"
+      android:layout_marginRight="5dp"
+      android:orientation="vertical"
+       >
+       
+	   <TextView 
+	      android:id="@+id/busy_ctp_backplane_label"
+	      android:layout_width="fill_parent"
 	      android:layout_height="25dp"
-         android:layout_marginRight="5dp"
-	      android:progress="0"
-	      android:max="100"
-	      style="@android:style/Widget.ProgressBar.Horizontal"
+	      android:layout_marginBottom="5dp"
+	      android:text="@string/busy_ctp_backplane_label"
+	      android:textSize="20dp"
+         android:gravity="center_horizontal|center_vertical" 
 	      />
+	   
+	   <com.parton.atlasStatus.BusyStatusBar 
+	   	android:id="@+id/busy_ctpcore_rslt_rate"
+         android:layout_width="fill_parent"
+         android:layout_height="25dp"
+         android:layout_marginBottom="5dp"
+         android:progress="0"
+         android:max="100"
+         style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="DAQ"
+          custom:text_mode="TEXT_NAME"
+         />
+		
+        <com.parton.atlasStatus.BusyStatusBar 
+        	android:id="@+id/busy_ctpcore_bckp_rate"
+           android:layout_width="fill_parent"
+           android:layout_height="25dp"
+           android:layout_marginBottom="5dp"
+           android:progress="0"
+           android:max="100"
+           style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="CORE Backplane"
+          custom:text_mode="TEXT_NAME"
+           />
+        
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpmi_bckp_rate"
+           android:layout_width="fill_parent"
+           android:layout_height="25dp"
+           android:layout_marginBottom="5dp"
+           android:progress="0"
+           android:max="100"
+           style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="MI Backplane"
+          custom:text_mode="TEXT_NAME"
+           />
 	</LinearLayout>
 	
-	<LinearLayout 
-      android:id="@+id/busy_row2_linear_layout"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:baselineAligned="false"
-       >
-	   
-		<LinearLayout 
-	      android:id="@+id/busy_ctp_backplane_linear_layout"
-	      android:layout_weight="1"
-	      android:layout_width="0dp"
-	      android:layout_height="125dp"
-	      android:layout_marginLeft="5dp"
-	      android:layout_marginRight="5dp"
-	      android:orientation="vertical"
-	       >
-	       
-		   <TextView 
-		      android:id="@+id/busy_ctp_backplane_label"
-		      android:layout_width="fill_parent"
-		      android:layout_height="25dp"
-		      android:layout_marginBottom="5dp"
-		      android:text="@string/busy_ctp_backplane_label"
-		      android:textSize="20dp"
-		      />
-		   
-		   <com.parton.atlasStatus.TextProgressBar 
-		   	android:id="@+id/busy_ctpcore_rslt_rate"
-	         android:layout_width="fill_parent"
-	         android:layout_height="25dp"
-	         android:layout_marginBottom="5dp"
-	         android:progress="0"
-	         android:max="100"
-	         style="@android:style/Widget.ProgressBar.Horizontal"
-	         />
-			
-         <com.parton.atlasStatus.TextProgressBar 
-         	android:id="@+id/busy_ctpcore_bckp_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpmi_bckp_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-		</LinearLayout>
-		
-		
-      <LinearLayout 
-         android:id="@+id/busy_ctp_deadtime_linear_layout"
-         android:layout_weight="1"
-         android:layout_width="0dp"
-         android:layout_height="125dp"
-         android:layout_marginRight="5dp"
-         android:orientation="vertical"
-          >
-          
-         <TextView 
-            android:id="@+id/busy_ctp_deadtime_label"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/busy_ctp_deadtime_label"
-            android:textSize="20dp"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpcore_moni2_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpcore_moni3_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-      </LinearLayout>
-		
-   </LinearLayout>
 	
+     <LinearLayout 
+        android:id="@+id/busy_ctp_deadtime_linear_layout"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="125dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical"
+         >
+         
+        <TextView 
+           android:id="@+id/busy_ctp_deadtime_label"
+           android:layout_width="fill_parent"
+           android:layout_height="25dp"
+           android:layout_marginBottom="5dp"
+           android:text="@string/busy_ctp_deadtime_label"
+           android:textSize="20dp"
+           android:gravity="center_horizontal|center_vertical"
+           />
+        
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpcore_moni2_rate"
+           android:layout_width="fill_parent"
+           android:layout_height="25dp"
+           android:layout_marginBottom="5dp"
+           android:progress="0"
+           android:max="100"
+           style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="Simple"
+          custom:text_mode="TEXT_NAME"
+           />
+        
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpcore_moni3_rate"
+           android:layout_width="fill_parent"
+           android:layout_height="25dp"
+           android:layout_marginBottom="5dp"
+           android:progress="0"
+           android:max="100"
+           style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="Complex"
+          custom:text_mode="TEXT_NAME"
+           />
+        
+     </LinearLayout>
 	
-   <LinearLayout 
-      android:id="@+id/busy_row3_linear_layout"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:baselineAligned="false"
-       >
-      
-      <LinearLayout 
-         android:id="@+id/busy_ctpout12_linear_layout"
-         android:layout_weight="1"
-         android:layout_width="0dp"
-         android:layout_height="180dp"
-         android:layout_marginRight="5dp"
-         android:layout_marginLeft="5dp"
-         android:orientation="vertical"
-          >
-          
-         <TextView 
-            android:id="@+id/busy_ctpout12_label"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/busy_ctpout12_label"
-            android:textSize="20dp"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_12_0_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_12_1_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_12_2_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_12_3_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_12_4_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         
-  	   </LinearLayout>
-  	   
-      
-      <LinearLayout 
-        android:id="@+id/busy_ctpout13_linear_layout"
+  </LinearLayout>
+
+
+  <LinearLayout 
+     android:id="@+id/busy_row3_linear_layout"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     android:baselineAligned="false"
+      >
+     
+     <LinearLayout 
+        android:id="@+id/busy_ctpout12_linear_layout"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:orientation="vertical"
          >
          
         <TextView 
-           android:id="@+id/busy_ctpout13_label"
+           android:id="@+id/busy_ctpout12_label"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
-           android:text="@string/busy_ctpout13_label"
+           android:text="@string/busy_ctpout12_label"
            android:textSize="20dp"
+           android:gravity="center_horizontal|center_vertical"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_13_0_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_12_0_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 12-0"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_13_1_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_12_1_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 12-1"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_13_2_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_12_2_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 12-2"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_13_3_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_12_3_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 12-3"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_13_4_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_12_4_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 12-4"
+           custom:text_mode="TEXT_NAME"
            />
-      </LinearLayout>
-      
-      <LinearLayout 
-        android:id="@+id/busy_ctpout14_linear_layout"
+        
+        
+ 	   </LinearLayout>
+ 	   
+     
+     <LinearLayout 
+       android:id="@+id/busy_ctpout13_linear_layout"
+       android:layout_weight="1"
+       android:layout_width="0dp"
+       android:layout_height="180dp"
+       android:layout_marginRight="5dp"
+       android:orientation="vertical"
+        >
+        
+       <TextView 
+          android:id="@+id/busy_ctpout13_label"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:text="@string/busy_ctpout13_label"
+          android:textSize="20dp"
+           android:gravity="center_horizontal|center_vertical"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_13_0_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 13-0"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_13_1_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 13-1"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_13_2_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 13-2"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_13_3_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 13-3"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_13_4_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 13-4"
+          custom:text_mode="TEXT_NAME"
+          />
+     </LinearLayout>
+     
+     <LinearLayout 
+       android:id="@+id/busy_ctpout14_linear_layout"
+       android:layout_weight="1"
+       android:layout_width="0dp"
+       android:layout_height="180dp"
+       android:layout_marginRight="5dp"
+       android:orientation="vertical"
+        >
+        
+       <TextView 
+          android:id="@+id/busy_ctpout14_label"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:text="@string/busy_ctpout14_label"
+          android:textSize="20dp"
+           android:gravity="center_horizontal|center_vertical"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_14_0_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 14-0"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_14_1_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 14-1"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_14_2_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 14-2"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_14_3_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 14-3"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpout_14_4_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="OUT 14-4"
+          custom:text_mode="TEXT_NAME"
+          />
+     </LinearLayout>
+     
+  </LinearLayout>
+  
+  
+  <LinearLayout 
+     android:id="@+id/busy_row4_linear_layout"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+     android:orientation="horizontal"
+     android:baselineAligned="false"
+      >
+     
+     <LinearLayout 
+        android:id="@+id/busy_ctpout15_linear_layout"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
         android:orientation="vertical"
          >
          
         <TextView 
-           android:id="@+id/busy_ctpout14_label"
+           android:id="@+id/busy_ctpout15_label"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
-           android:text="@string/busy_ctpout14_label"
+           android:text="@string/busy_ctpout15_label"
            android:textSize="20dp"
+           android:gravity="center_horizontal|center_vertical"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_14_0_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_15_0_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 15-0"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_14_1_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_15_1_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 15-1"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_14_2_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_15_2_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 15-2"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_14_3_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_15_3_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="OUT 15-3"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpout_14_4_rate"
+        <com.parton.atlasStatus.BusyStatusBar 
+           android:id="@+id/busy_ctpout_15_4_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
            android:layout_marginBottom="5dp"
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
-           />
-      </LinearLayout>
-      
-   </LinearLayout>
-   
-   
-   <LinearLayout 
-      android:id="@+id/busy_row4_linear_layout"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:baselineAligned="false"
-       >
-      
-      <LinearLayout 
-         android:id="@+id/busy_ctpout15_linear_layout"
-         android:layout_weight="1"
-         android:layout_width="0dp"
-         android:layout_height="180dp"
-         android:layout_marginRight="5dp"
-         android:layout_marginLeft="5dp"
-         android:orientation="vertical"
-          >
-          
-         <TextView 
-            android:id="@+id/busy_ctpout15_label"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:text="@string/busy_ctpout15_label"
-            android:textSize="20dp"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_15_0_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_15_1_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_15_2_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_15_3_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         <com.parton.atlasStatus.TextProgressBar 
-            android:id="@+id/busy_ctpout_15_4_rate"
-            android:layout_width="fill_parent"
-            android:layout_height="25dp"
-            android:layout_marginBottom="5dp"
-            android:progress="0"
-            android:max="100"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            />
-         
-         
-      </LinearLayout>
-      
-      
-      <LinearLayout 
-        android:id="@+id/busy_ctpmi_linear_layout"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="180dp"
-        android:layout_marginRight="5dp"
-        android:orientation="vertical"
-         >
-         
-        <TextView 
-           android:id="@+id/busy_ctpmi_label"
-           android:layout_width="fill_parent"
-           android:layout_height="25dp"
-           android:layout_marginBottom="5dp"
-           android:text="@string/busy_ctpmi_label"
-           android:textSize="20dp"
+           custom:enabled="true"
+           custom:name="OUT 15-4"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpmi_vme_rate"
-           android:layout_width="fill_parent"
-           android:layout_height="25dp"
-           android:layout_marginBottom="5dp"
-           android:progress="0"
-           android:max="100"
-           style="@android:style/Widget.ProgressBar.Horizontal"
+        
+     </LinearLayout>
+     
+     
+     <LinearLayout 
+       android:id="@+id/busy_ctpmi_linear_layout"
+       android:layout_weight="1"
+       android:layout_width="0dp"
+       android:layout_height="180dp"
+       android:layout_marginRight="5dp"
+       android:orientation="vertical"
+        >
+        
+       <TextView 
+          android:id="@+id/busy_ctpmi_label"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:text="@string/busy_ctpmi_label"
+          android:textSize="20dp"
+          android:gravity="center_horizontal|center_vertical"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpmi_vme_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="VME"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpmi_ecr_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="ECR"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpmi_vto0_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="Veto 1"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+       <com.parton.atlasStatus.BusyStatusBar 
+          android:id="@+id/busy_ctpmi_vto1_rate"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:progress="0"
+          android:max="100"
+          style="@android:style/Widget.ProgressBar.Horizontal"
+          custom:enabled="true"
+          custom:name="Veto 2"
+          custom:text_mode="TEXT_NAME"
+          />
+       
+     </LinearLayout>
+     
+     <LinearLayout 
+       android:id="@+id/busy_ctpcore_linear_layout"
+       android:layout_weight="1"
+       android:layout_width="0dp"
+       android:layout_height="180dp"
+       android:layout_marginRight="5dp"
+       android:orientation="vertical"
+        >
+        
+       <TextView 
+          android:id="@+id/busy_ctpcore_label"
+          android:layout_width="fill_parent"
+          android:layout_height="25dp"
+          android:layout_marginBottom="5dp"
+          android:text="@string/busy_ctpcore_label"
+          android:textSize="20dp"
+          android:gravity="center_horizontal|center_vertical"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpmi_ecr_rate"
-           android:layout_width="fill_parent"
-           android:layout_height="25dp"
-           android:layout_marginBottom="5dp"
-           android:progress="0"
-           android:max="100"
-           style="@android:style/Widget.ProgressBar.Horizontal"
-           />
-        
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpmi_vto0_rate"
-           android:layout_width="fill_parent"
-           android:layout_height="25dp"
-           android:layout_marginBottom="5dp"
-           android:progress="0"
-           android:max="100"
-           style="@android:style/Widget.ProgressBar.Horizontal"
-           />
-        
-        <com.parton.atlasStatus.TextProgressBar 
-           android:id="@+id/busy_ctpmi_vto1_rate"
-           android:layout_width="fill_parent"
-           android:layout_height="25dp"
-           android:layout_marginBottom="5dp"
-           android:progress="0"
-           android:max="100"
-           style="@android:style/Widget.ProgressBar.Horizontal"
-           />
-        
-      </LinearLayout>
-      
-      <LinearLayout 
-        android:id="@+id/busy_ctpcore_linear_layout"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:layout_height="180dp"
-        android:layout_marginRight="5dp"
-        android:orientation="vertical"
-         >
-         
-        <TextView 
-           android:id="@+id/busy_ctpcore_label"
-           android:layout_width="fill_parent"
-           android:layout_height="25dp"
-           android:layout_marginBottom="5dp"
-           android:text="@string/busy_ctpcore_label"
-           android:textSize="20dp"
-           />
-        
-        <com.parton.atlasStatus.TextProgressBar 
+        <com.parton.atlasStatus.BusyStatusBar 
            android:id="@+id/busy_ctpcore_rdt_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
@@ -534,9 +639,12 @@
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="Derand 1"
+           custom:text_mode="TEXT_NAME"
            />
         
-        <com.parton.atlasStatus.TextProgressBar 
+        <com.parton.atlasStatus.BusyStatusBar 
            android:id="@+id/busy_ctpcore_mon_rate"
            android:layout_width="fill_parent"
            android:layout_height="25dp"
@@ -544,6 +652,9 @@
            android:progress="0"
            android:max="100"
            style="@android:style/Widget.ProgressBar.Horizontal"
+           custom:enabled="true"
+           custom:name="Derand 2"
+           custom:text_mode="TEXT_NAME"
            />
         
       </LinearLayout>

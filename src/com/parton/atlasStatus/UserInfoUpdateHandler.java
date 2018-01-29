@@ -40,9 +40,7 @@ public class UserInfoUpdateHandler extends Handler{
 				ISInfoList = (HashMap<String, ISInfo>) msg.obj;
 				updatePartitionStatusView();
 				updateTextViews();
-				updateBusyStatusTextViews();
-				updateBusyStatusProgressBars();
-//				updateBusyCtpoutEnabledProgressBars();
+//				updateBusyStatusTextViews();
 				updateBkgdColorTextViews();
 				updateDetectorMaskTextViews();
 				updateMenuTime();
@@ -329,235 +327,57 @@ public class UserInfoUpdateHandler extends Handler{
 	// Text Views for Busy Status
 	/////////////////////////////////////////////////////
 	
-	private final float busy_warning_level = 5; // % busy
-	private HashMap<String,Integer> busyStatusTextViewList = new HashMap<String,Integer>();
-	public void busyStatusTextViewList(String is_attr_name,int text_view_id){
-		busyStatusTextViewList.put(is_attr_name, text_view_id);
-	}
-	
-	public void updateBusyStatusTextView(String is_attr_name,int text_view_id){
-		if(ISInfoList == null)
-			return;
-		
-		String is_info_name = "l1ct_busy_status";
-		ISInfo info = ISInfoList.get(is_info_name);
-		if(info == null){
-//			Log.w(TAG,"busyStatusTextViewList: no ISInfo object named: "+is_info_name);
-			return;
-		}
-		
-		ISObjectAttr attr = info.getAttr(is_attr_name);
-		if(attr == null){
-//			Log.w(TAG,"busyStatusTextViewList: no attr named: "+is_attr_name);
-			return;
-		}
-		
-		TextView view = (TextView)ParentActivity.findViewById(text_view_id);
-		if(view == null){
-//			Log.w(TAG,"busyStatusTextViewList: view is null");
-			return;
-		}
-		
-		view.setText(attr.values(0).substring(0,3)+"%");
-		float busy = Float.parseFloat(attr.values(0));
-		if(busy > busy_warning_level){
-			view.setTextColor(ParentActivity.getResources().getColor(R.color.red));
-		}
-		else{
-			view.setTextColor(ParentActivity.getResources().getColor(R.color.green));
-		}
-		
-		
-	}
-
-	private void updateBusyStatusTextViews(){
-		
-		for(int i=0;i<busyStatusTextViewList.size();++i){
-			String attr_name = (String) busyStatusTextViewList.keySet().toArray()[i];
-			int text_view_id = (Integer) busyStatusTextViewList.values().toArray()[i];
-			updateBusyStatusTextView(attr_name,text_view_id);
-		}
-	}
-	
-
-	//////////////////////
-	// Progress Bars for Busy Status
-	/////////////////////////////////////////////////////
-	private HashMap<String,Integer> busyStatusProgressBarList = new HashMap<String,Integer>();
-	public void busyStatusProgressBarList(String is_attr_name,int id){
-		busyStatusProgressBarList.put(is_attr_name, id);
-	}
-	
-	public void updateBusyStatusProgressBar(String is_attr_name,int id){
-		if(ISInfoList == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: ISInfoList is null");
-			return;
-		}
-		
-		String is_info_name = "l1ct_busy_status";
-		ISInfo info = ISInfoList.get(is_info_name);
-		if(info == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: no ISInfo object named: "+is_info_name);
-			return;
-		}
-
-		int valueIndex = 0;
-		String is_attr_name_real = is_attr_name;
-		if(is_attr_name.contains("ctpout_12")){
-			is_attr_name_real = "ctpout_12";
-			if(is_attr_name.contains("ctpout_12_1"))
-					valueIndex = 1;
-			else if(is_attr_name.contains("ctpout_12_2"))
-					valueIndex = 2;
-			else if(is_attr_name.contains("ctpout_12_3"))
-					valueIndex = 3;
-			else if(is_attr_name.contains("ctpout_12_4"))
-					valueIndex = 4;
-		}
-		else if(is_attr_name.contains("ctpout_13")){
-			is_attr_name_real = "ctpout_13";
-			if(is_attr_name.contains("ctpout_13_1"))
-				valueIndex = 1;
-			else if(is_attr_name.contains("ctpout_13_2"))
-				valueIndex = 2;
-			else if(is_attr_name.contains("ctpout_13_3"))
-				valueIndex = 3;
-			else if(is_attr_name.contains("ctpout_13_4"))
-				valueIndex = 4;
-		}
-		else if(is_attr_name.contains("ctpout_14")){
-			is_attr_name_real = "ctpout_14";
-			if(is_attr_name.contains("ctpout_14_1"))
-				valueIndex = 1;
-			else if(is_attr_name.contains("ctpout_14_2"))
-				valueIndex = 2;
-			else if(is_attr_name.contains("ctpout_14_3"))
-				valueIndex = 3;
-			else if(is_attr_name.contains("ctpout_14_4"))
-				valueIndex = 4;
-		}
-		else if(is_attr_name.contains("ctpout_15")){
-			is_attr_name_real = "ctpout_15";
-			if(is_attr_name.contains("ctpout_15_1"))
-				valueIndex = 1;
-			else if(is_attr_name.contains("ctpout_15_2"))
-				valueIndex = 2;
-			else if(is_attr_name.contains("ctpout_15_3"))
-				valueIndex = 3;
-			else if(is_attr_name.contains("ctpout_15_4"))
-				valueIndex = 4;
-		}
-		
-		ISObjectAttr attr = info.getAttr(is_attr_name_real);
-		if(attr == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: no attr named: "+is_attr_name);
-			return;
-		}
-		
-
-		TextProgressBar view = (TextProgressBar)ParentActivity.findViewById(id);
-		if(view == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: view is null");
-			return;
-		}
-		
-			
-		
-		float busy = Float.parseFloat(attr.values(valueIndex));
-		view.setProgress((int) busy);
-		view.setText(attr.values(valueIndex).substring(0,3)+"%");
-		
-		if(busy > busy_warning_level){
-			view.setTextColor(ParentActivity.getResources().getColor(R.color.red));
-		}
-		else{
-			view.setTextColor(ParentActivity.getResources().getColor(R.color.green));
-		}
-		
-		
-	}
-
-	private void updateBusyStatusProgressBars(){
-//		Log.v(TAG,"updateBusyStatusProgressBars: inside");
-		
-		for(int i=0;i<busyStatusProgressBarList.size();++i){
-			String attr_name = (String) busyStatusProgressBarList.keySet().toArray()[i];
-			int text_view_id = (Integer) busyStatusProgressBarList.values().toArray()[i];
-			updateBusyStatusProgressBar(attr_name,text_view_id);
-		}
-	}
+//	private final float busy_warning_level = 5; // % busy
+//	private HashMap<String,Integer> busyStatusTextViewList = new HashMap<String,Integer>();
+//	public void busyStatusTextViewList(String is_attr_name,int text_view_id){
+//		busyStatusTextViewList.put(is_attr_name, text_view_id);
+//	}
+//	
+//	public void updateBusyStatusTextView(String is_attr_name,int text_view_id){
+//		if(ISInfoList == null)
+//			return;
+//		
+//		String is_info_name = "l1ct_busy_status";
+//		ISInfo info = ISInfoList.get(is_info_name);
+//		if(info == null){
+////			Log.w(TAG,"busyStatusTextViewList: no ISInfo object named: "+is_info_name);
+//			return;
+//		}
+//		
+//		ISObjectAttr attr = info.getAttr(is_attr_name);
+//		if(attr == null){
+////			Log.w(TAG,"busyStatusTextViewList: no attr named: "+is_attr_name);
+//			return;
+//		}
+//		
+//		TextView view = (TextView)ParentActivity.findViewById(text_view_id);
+//		if(view == null){
+////			Log.w(TAG,"busyStatusTextViewList: view is null");
+//			return;
+//		}
+//		
+//		view.setText(attr.values(0).substring(0,3)+"%");
+//		float busy = Float.parseFloat(attr.values(0));
+//		if(busy > busy_warning_level){
+//			view.setTextColor(ParentActivity.getResources().getColor(R.color.red));
+//		}
+//		else{
+//			view.setTextColor(ParentActivity.getResources().getColor(R.color.green));
+//		}
+//		
+//		
+//	}
+//
+//	private void updateBusyStatusTextViews(){
+//		
+//		for(int i=0;i<busyStatusTextViewList.size();++i){
+//			String attr_name = (String) busyStatusTextViewList.keySet().toArray()[i];
+//			int text_view_id = (Integer) busyStatusTextViewList.values().toArray()[i];
+//			updateBusyStatusTextView(attr_name,text_view_id);
+//		}
+//	}
 	
 
-	//////////////////////
-	// Progress Bars for Busy Status ( Names and enabled )
-	/////////////////////////////////////////////////////
-	private HashMap<String,HashMap<String,Integer>> busyCtpoutEnabledProgressBarList = new HashMap<String,HashMap<String,Integer>>();
-	public void busyCtpoutEnabledProgressBarList(String is_info_name,String is_attr_name,int id){
-		if(!busyCtpoutEnabledProgressBarList.containsKey(is_info_name)){
-			HashMap<String,Integer> inner = new HashMap<String,Integer>();
-			inner.put(is_attr_name, id);
-			
-			busyCtpoutEnabledProgressBarList.put(is_attr_name, inner);
-		}
-		else{
-			HashMap<String,Integer> inner = (HashMap<String,Integer>) busyCtpoutEnabledProgressBarList.get(is_info_name);
-			if(!inner.containsKey(is_attr_name)){
-				inner.put(is_attr_name, id);
-			}
-			else{
-				inner.remove(is_attr_name);
-				inner.put(is_attr_name, id);
-				
-			}
-		}
-	}
-	
-	public void updateBusyCtpoutEnabledProgressBar(String is_info_name, String is_attr_name,int id){
-		if(ISInfoList == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: ISInfoList is null");
-			return;
-		}
-		
-		ISInfo info = ISInfoList.get(is_info_name);
-		if(info == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: no ISInfo object named: "+is_info_name);
-			return;
-		}
-
-		
-		ISObjectAttr attr = info.getAttr(is_attr_name);
-		if(attr == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: no attr named: "+is_attr_name);
-			return;
-		}
-		
-
-		TextProgressBar view = (TextProgressBar)ParentActivity.findViewById(id);
-		if(view == null){
-//			Log.w(TAG,"updateBusyStatusProgressBar: view is null");
-			return;
-		}
-		
-			
-		view.setText(attr.values(0));
-		
-	}
-
-	@SuppressWarnings("unchecked")
-	private void updateBusyCtpoutEnabledProgressBars(){
-//		Log.v(TAG,"updateBusyStatusProgressBars: inside");
-		
-		for(int i=0;i<busyCtpoutEnabledProgressBarList.size();++i){
-			String info_name = (String) busyCtpoutEnabledProgressBarList.keySet().toArray()[i];
-			HashMap<String,Integer> inner = (HashMap<String,Integer>) busyCtpoutEnabledProgressBarList.values().toArray()[i];
-			for(int j=0;j<inner.size();++i){
-				String attr_name = (String) inner.keySet().toArray()[j];
-				int id = (Integer)inner.values().toArray()[j];
-				updateBusyCtpoutEnabledProgressBar(info_name,attr_name,id);
-			}
-		}
-	}
-	
 	
 	private void AddViews(){
 //		Log.v(TAG,"AddViews: inside");
@@ -594,50 +414,8 @@ public class UserInfoUpdateHandler extends Handler{
 		detectorMaskTextViewList("FORWARD_ZDC", R.id.atlas_included_hw_zdc);
 		
 		// busy status
-		busyStatusTextViewList("ctpcore_moni0_rate", R.id.busy_summary_low);
-		busyStatusTextViewList("ctpcore_moni1_rate", R.id.busy_summary_high);
-
-		busyStatusProgressBarList("ctpcore_moni0_rate", R.id.busy_ctpcore_moni0_rate);
-		busyStatusProgressBarList("ctpcore_moni1_rate", R.id.busy_ctpcore_moni1_rate);
-		busyStatusProgressBarList("ctpcore_moni2_rate", R.id.busy_ctpcore_moni2_rate);
-		busyStatusProgressBarList("ctpcore_moni3_rate", R.id.busy_ctpcore_moni3_rate);
-		busyStatusProgressBarList("ctpcore_bckp_rate", R.id.busy_ctpcore_bckp_rate);
-		busyStatusProgressBarList("ctpcore_rslt_rate", R.id.busy_ctpcore_rslt_rate);
-		busyStatusProgressBarList("ctpmi_bckp_rate", R.id.busy_ctpmi_bckp_rate);
-		
-		busyStatusProgressBarList("ctpout_12_0", R.id.busy_ctpout_12_0_rate);
-		busyStatusProgressBarList("ctpout_12_1", R.id.busy_ctpout_12_1_rate);
-		busyStatusProgressBarList("ctpout_12_2", R.id.busy_ctpout_12_2_rate);
-		busyStatusProgressBarList("ctpout_12_3", R.id.busy_ctpout_12_3_rate);
-		busyStatusProgressBarList("ctpout_12_4", R.id.busy_ctpout_12_4_rate);
-
-		busyStatusProgressBarList("ctpout_13_0_rate", R.id.busy_ctpout_13_0_rate);
-		busyStatusProgressBarList("ctpout_13_1_rate", R.id.busy_ctpout_13_1_rate);
-		busyStatusProgressBarList("ctpout_13_2_rate", R.id.busy_ctpout_13_2_rate);
-		busyStatusProgressBarList("ctpout_13_3_rate", R.id.busy_ctpout_13_3_rate);
-		busyStatusProgressBarList("ctpout_13_4_rate", R.id.busy_ctpout_13_4_rate);
-
-		busyStatusProgressBarList("ctpout_14_0_rate", R.id.busy_ctpout_14_0_rate);
-		busyStatusProgressBarList("ctpout_14_1_rate", R.id.busy_ctpout_14_1_rate);
-		busyStatusProgressBarList("ctpout_14_2_rate", R.id.busy_ctpout_14_2_rate);
-		busyStatusProgressBarList("ctpout_14_3_rate", R.id.busy_ctpout_14_3_rate);
-		busyStatusProgressBarList("ctpout_14_4_rate", R.id.busy_ctpout_14_4_rate);
-
-		busyStatusProgressBarList("ctpout_15_0_rate", R.id.busy_ctpout_15_0_rate);
-		busyStatusProgressBarList("ctpout_15_1_rate", R.id.busy_ctpout_15_1_rate);
-		busyStatusProgressBarList("ctpout_15_2_rate", R.id.busy_ctpout_15_2_rate);
-		busyStatusProgressBarList("ctpout_15_3_rate", R.id.busy_ctpout_15_3_rate);
-		busyStatusProgressBarList("ctpout_15_4_rate", R.id.busy_ctpout_15_4_rate);
-
-		busyStatusProgressBarList("ctpmi_vme_rate", R.id.busy_ctpmi_vme_rate);
-		busyStatusProgressBarList("ctpmi_ecr_rate", R.id.busy_ctpmi_ecr_rate);
-		busyStatusProgressBarList("ctpmi_vto0_rate", R.id.busy_ctpmi_vto0_rate);
-		busyStatusProgressBarList("ctpmi_vto1_rate", R.id.busy_ctpmi_vto1_rate);
-		
-		busyStatusProgressBarList("ctpcore_rdt_rate", R.id.busy_ctpcore_rdt_rate);
-		busyStatusProgressBarList("ctpcore_mon_rate", R.id.busy_ctpcore_mon_rate);
-		
-		//busyCtpoutEnabledProgressBarList("l1ct_ctpout12_busy_status","connector0_name",R.id.busy_ctpout_12_0_rate);
+//		busyStatusTextViewList("ctpcore_moni0_rate", R.id.busy_summary_low);
+//		busyStatusTextViewList("ctpcore_moni1_rate", R.id.busy_summary_high);
 		
 		
 	}

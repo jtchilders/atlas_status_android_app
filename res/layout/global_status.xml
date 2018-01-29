@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   xmlns:custom="http://schemas.android.com/apk/res/com.parton.atlasStatus"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
    android:background="@drawable/atlas_logo_opacity10" >
@@ -98,26 +99,33 @@
          android:gravity="center_horizontal|center_vertical"
          android:text="@string/atlas_busy_summary_label"
          android:textSize="20dp" />
-
-      <TextView
-         android:id="@+id/busy_summary_high"
+      
+      <com.parton.atlasStatus.BusyStatusBar android:id="@+id/busy_summary_high"
+	      android:layout_width="fill_parent"
+	      android:layout_height="25dp"
+	      android:layout_marginRight="5dp"
+         android:layout_weight="1"
+	      android:progress="0"
+	      android:max="100"
+	      style="@android:style/Widget.ProgressBar.Horizontal"
+	      custom:enabled="true"
+	      custom:name="Priority High"
+	      custom:text_mode="TEXT_PERCENT"
+	      />
+      
+      <com.parton.atlasStatus.BusyStatusBar android:id="@+id/busy_summary_low"
          android:layout_width="fill_parent"
          android:layout_height="25dp"
-         android:layout_margin="0dp"
+         android:layout_marginRight="5dp"
          android:layout_weight="1"
-         android:gravity="center_horizontal|center_vertical"
-         android:text="@string/atlas_busy_summary_high"
-         android:textSize="20dp" />
-
-      <TextView
-         android:id="@+id/busy_summary_low"
-         android:layout_width="fill_parent"
-         android:layout_height="25dp"
-         android:layout_margin="0dp"
-         android:layout_weight="1"
-         android:gravity="center_horizontal|center_vertical"
-         android:text="@string/atlas_busy_summary_low"
-         android:textSize="20dp" />
+         android:progress="0"
+         android:max="100"
+         style="@android:style/Widget.ProgressBar.Horizontal"
+         custom:enabled="true"
+         custom:name="Priority Low"
+         custom:text_mode="TEXT_PERCENT"
+         />
+      
    </LinearLayout>
 
    <TextView

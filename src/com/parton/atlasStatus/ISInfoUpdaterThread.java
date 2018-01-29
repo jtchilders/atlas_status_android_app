@@ -204,16 +204,79 @@ public class ISInfoUpdaterThread extends Thread {
         addISInfo("lhc_stable_beams_flag", lhc_stable_beams_flag);
         ISInfo lhc_beam_mode = new ISInfo(MainActivity.INITIAL_PARTITION,"LHC","BeamMode",ParentActivity.cern_cookie());
         addISInfo("lhc_beam_mode", lhc_beam_mode);
-        ISInfo l1ct_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT-History","ISCTPBUSY",ParentActivity.cern_cookie());
-        addISInfo("l1ct_busy_status", l1ct_busy_status);
-        ISInfo l1ct_ctpout12_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_12",ParentActivity.cern_cookie());
-        addISInfo("l1ct_ctpout12_busy_status", l1ct_ctpout12_busy_status);
-        ISInfo l1ct_ctpout13_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_13",ParentActivity.cern_cookie());
-        addISInfo("l1ct_ctpout13_busy_status", l1ct_ctpout13_busy_status);
-        ISInfo l1ct_ctpout14_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_14",ParentActivity.cern_cookie());
-        addISInfo("l1ct_ctpout14_busy_status", l1ct_ctpout14_busy_status);
-        ISInfo l1ct_ctpout15_busy_status = new ISInfo(MainActivity.TDAQ_PARTITION,"L1CT","ISCTPOUT_15",ParentActivity.cern_cookie());
-        addISInfo("l1ct_ctpout15_busy_status", l1ct_ctpout15_busy_status);
+        
+
+        L1CT_ISCTPOUT l1ct_ctpout_12 = new L1CT_ISCTPOUT(MainActivity.TDAQ_PARTITION,ParentActivity,12);
+        l1ct_ctpout_12.addProgressBar(R.id.busy_ctpout_12_0_rate,0);
+        l1ct_ctpout_12.addProgressBar(R.id.busy_ctpout_12_1_rate,1);
+        l1ct_ctpout_12.addProgressBar(R.id.busy_ctpout_12_2_rate,2);
+        l1ct_ctpout_12.addProgressBar(R.id.busy_ctpout_12_3_rate,3);
+        l1ct_ctpout_12.addProgressBar(R.id.busy_ctpout_12_4_rate,4);
+        addISInfo("l1ct_ctpout_12",l1ct_ctpout_12);
+        
+        L1CT_ISCTPOUT l1ct_ctpout_13 = new L1CT_ISCTPOUT(MainActivity.TDAQ_PARTITION,ParentActivity,13);
+        l1ct_ctpout_13.addProgressBar(R.id.busy_ctpout_13_0_rate,0);
+        l1ct_ctpout_13.addProgressBar(R.id.busy_ctpout_13_1_rate,1);
+        l1ct_ctpout_13.addProgressBar(R.id.busy_ctpout_13_2_rate,2);
+        l1ct_ctpout_13.addProgressBar(R.id.busy_ctpout_13_3_rate,3);
+        l1ct_ctpout_13.addProgressBar(R.id.busy_ctpout_13_4_rate,4);
+        addISInfo("l1ct_ctpout_13",l1ct_ctpout_13);
+        
+        L1CT_ISCTPOUT l1ct_ctpout_14 = new L1CT_ISCTPOUT(MainActivity.TDAQ_PARTITION,ParentActivity,14);
+        l1ct_ctpout_14.addProgressBar(R.id.busy_ctpout_14_0_rate,0);
+        l1ct_ctpout_14.addProgressBar(R.id.busy_ctpout_14_1_rate,1);
+        l1ct_ctpout_14.addProgressBar(R.id.busy_ctpout_14_2_rate,2);
+        l1ct_ctpout_14.addProgressBar(R.id.busy_ctpout_14_3_rate,3);
+        l1ct_ctpout_14.addProgressBar(R.id.busy_ctpout_14_4_rate,4);
+        addISInfo("l1ct_ctpout_14",l1ct_ctpout_14);
+        
+        L1CT_ISCTPOUT l1ct_ctpout_15 = new L1CT_ISCTPOUT(MainActivity.TDAQ_PARTITION,ParentActivity,15);
+        l1ct_ctpout_15.addProgressBar(R.id.busy_ctpout_15_0_rate,0);
+        l1ct_ctpout_15.addProgressBar(R.id.busy_ctpout_15_1_rate,1);
+        l1ct_ctpout_15.addProgressBar(R.id.busy_ctpout_15_2_rate,2);
+        l1ct_ctpout_15.addProgressBar(R.id.busy_ctpout_15_3_rate,3);
+        l1ct_ctpout_15.addProgressBar(R.id.busy_ctpout_15_4_rate,4);
+        addISInfo("l1ct_ctpout_15",l1ct_ctpout_15);
+        
+        L1CTBusyHistory l1ct_busy_history = new L1CTBusyHistory(MainActivity.TDAQ_PARTITION,ParentActivity);
+        l1ct_busy_history.addProgressBar(R.id.busy_summary_low, 		"ctpcore_moni0_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_summary_high, 		"ctpcore_moni1_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_moni0_rate, 	"ctpcore_moni0_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_moni1_rate, 	"ctpcore_moni1_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_moni2_rate, 	"ctpcore_moni2_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_moni3_rate, 	"ctpcore_moni3_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_rslt_rate, 	"ctpcore_rslt_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_bckp_rate, 	"ctpcore_bckp_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_rdt_rate, 	"ctpcore_rdt_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpcore_mon_rate, 	"ctpcore_mon_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpmi_bckp_rate,  	"ctpmi_bckp_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpmi_vme_rate,   	"ctpmi_vme_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpmi_ecr_rate,   	"ctpmi_ecr_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpmi_vto0_rate,  	"ctpmi_vto0_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpmi_vto1_rate,  	"ctpmi_vto1_rate", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_12_0_rate, 	"ctpout_12", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_12_1_rate, 	"ctpout_12", 1);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_12_2_rate, 	"ctpout_12", 2);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_12_3_rate, 	"ctpout_12", 3);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_12_4_rate, 	"ctpout_13", 4);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_13_0_rate, 	"ctpout_13", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_13_1_rate, 	"ctpout_13", 1);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_13_2_rate, 	"ctpout_13", 2);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_13_3_rate, 	"ctpout_13", 3);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_13_4_rate, 	"ctpout_13", 4);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_14_0_rate, 	"ctpout_14", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_14_1_rate, 	"ctpout_14", 1);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_14_2_rate, 	"ctpout_14", 2);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_14_3_rate, 	"ctpout_14", 3);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_14_4_rate, 	"ctpout_14", 4);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_15_0_rate, 	"ctpout_15", 0);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_15_1_rate, 	"ctpout_15", 1);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_15_2_rate, 	"ctpout_15", 2);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_15_3_rate, 	"ctpout_15", 3);
+        l1ct_busy_history.addProgressBar(R.id.busy_ctpout_15_4_rate, 	"ctpout_15", 4);
+        addISInfo("l1ct_busy_history",l1ct_busy_history);
+
+        
 	}
 	
 	public void UpdateSyncFrequency(){
